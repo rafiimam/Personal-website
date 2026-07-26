@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-base-900 text-slate-300 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  ::selection {
+    @apply bg-gold-400/30 text-gold-100;
+  }
+}
+
+@layer components {
+  /* Academic card — subtle warmth, no gimmicks */
+  .card {
+    @apply bg-base-800/70 border border-base-700/60 rounded-xl;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    @apply border-base-600 bg-base-750/80;
+    transform: translateY(-1px);
+  }
+
+  /* Section divider — warm gold gradient line */
+  .section-divider {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, transparent, rgba(245, 190, 58, 0.25), transparent);
+  }
+
+  /* Gold underline for emphasis */
+  .gold-underline {
+    @apply decoration-gold-400/50 underline underline-offset-4 decoration-2;
+  }
+
+  /* Pill badge styles */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium font-mono tracking-wide;
+  }
+  .badge-gold {
+    @apply bg-gold-400/10 text-gold-300 border border-gold-400/20;
+  }
+  .badge-teal {
+    @apply bg-teal-400/10 text-teal-300 border border-teal-400/20;
+  }
+  .badge-subtle {
+    @apply bg-base-700/60 text-slate-400 border border-base-600/40;
+  }
+}
+
+/* Custom Scrollbar — minimal, dark */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #080c16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2a42;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #27364f;
+}
