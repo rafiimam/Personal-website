@@ -60,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           {/* Right actions */}
           <div className="flex items-center gap-3">
             <a
-              href={assetUrl('./Assets/MD_RAFI_IMAM_CV.pdf')}
+              href={assetUrl('./docs/MD_RAFI_IMAM_CV.pdf')}
               download
               className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-gold-300 bg-gold-400/10 hover:bg-gold-400/20 border border-gold-400/25 rounded-lg transition-all"
             >

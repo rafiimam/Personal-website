@@ -89,8 +89,8 @@ export const SALLORA_RESEARCH = {
     { method: "Noisy LoRA (No Robustness)", corruption: "50%", f1: 0.6334, note: "-3.76 F1 degradation" },
     { method: "SALLoRA (Proposed Framework)", corruption: "50%", f1: 0.7758, note: "+14.24 F1 over noisy LoRA" }
   ],
-  pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_SALLoRA_Research_Progress_Report.pdf"),
-  summaryPdfUrl: assetUrl("./Assets/MD_Rafi_Imam_ResearchSummary.pdf")
+  pdfUrl: assetUrl("./docs/MD_Rafi_Imam_SALLoRA_Research_Progress_Report.pdf"),
+  summaryPdfUrl: assetUrl("./docs/MD_Rafi_Imam_ResearchSummary.pdf")
 };
 
 export const PUBLICATIONS: Publication[] = [
@@ -108,7 +108,7 @@ export const PUBLICATIONS: Publication[] = [
       "Engineered gradient sensitivity masking to isolate parameters responsive to uncorrupted representations.",
       "Achieved 0.7758 F1 score on clean FUNSD benchmark under 50% training-time OCR noise."
     ],
-    pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_SALLoRA_Research_Progress_Report.pdf"),
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_SALLoRA_Research_Progress_Report.pdf"),
     bibtex: `@article{imam2026sallora,
   title={SALLoRA: Robust Parameter-Efficient Fine-Tuning for Multimodal Foundation Models under Structured Input Corruption},
   author={Imam, Md. Rafi},
@@ -131,7 +131,7 @@ export const PUBLICATIONS: Publication[] = [
       "Transformer model architecture design and comparative benchmarking against traditional NLP models.",
       "Evaluated model generalization across diverse subreddits."
     ],
-    pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_Selected_Publications.pdf"),
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_Selected_Publications.pdf"),
     bibtex: `@inproceedings{imam2023suicidal,
   title={Suicidal Thought Detection Using NLP on Reddit Data},
   author={Imam, R. and others},
@@ -156,7 +156,7 @@ export const PUBLICATIONS: Publication[] = [
       "Engineered secure parameter aggregation protocol and validated global model convergence.",
       "Analyzed communication efficiency and accuracy trade-offs across non-IID data distributions."
     ],
-    pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_Selected_Publications.pdf"),
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_Selected_Publications.pdf"),
     bibtex: `@inproceedings{hossain2023federated,
   title={Privacy-Preserving Federated Learning for Lung Cancer Classification},
   author={Hossain, Md. M. and Imam, R. and others},
@@ -179,7 +179,7 @@ export const PUBLICATIONS: Publication[] = [
       "Real-time latency benchmarking on edge computing hardware.",
       "Evaluated bounding box prediction accuracy across low-light and rain scenarios."
     ],
-    pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_Selected_Publications.pdf"),
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_Selected_Publications.pdf"),
     bibtex: `@inproceedings{afrin2023yolov8,
   title={YOLOv8-based Object Detection for Self-driving Cars},
   author={Afrin, Z. and Tabassum, F. and Kibria, H. B. and Imam, M. R. and Hasan, M. R.},
@@ -202,7 +202,7 @@ export const PUBLICATIONS: Publication[] = [
       "Baseline machine learning model development (XGBoost, Random Forest, SVM).",
       "Model interpretability and feature importance analysis."
     ],
-    pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_Selected_Publications.pdf"),
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_Selected_Publications.pdf"),
     bibtex: `@inproceedings{mou2023pcos,
   title={Detecting Polycystic Ovary Syndrome Using Machine Learning},
   author={Mou, T. H. and Imam, R. and others},
@@ -255,7 +255,7 @@ export const ACADEMIC_CREDENTIALS = {
     verbalPercentile: "10th Percentile",
     awaScore: "3.0",
     awaPercentile: "17th Percentile",
-    pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_GRE.pdf")
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_GRE.pdf")
   },
   ielts: {
     testDate: "November 28, 2025",
@@ -265,9 +265,9 @@ export const ACADEMIC_CREDENTIALS = {
     reading: 7.0,
     writing: 6.5,
     speaking: 6.5,
-    pdfUrl: assetUrl("./Assets/MD_Rafi_Imam_IELTS.pdf")
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_IELTS.pdf")
   },
-  transcriptPdfUrl: assetUrl("./Assets/MD_Rafi_Imam_Transcript.pdf")
+  transcriptPdfUrl: assetUrl("./docs/MD_Rafi_Imam_Transcript.pdf")
 };
 
 export const DOCUMENT_ASSETS: DocumentAsset[] = [
@@ -276,7 +276,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     title: "Curriculum Vitae (CV)",
     category: "CV",
     description: "Complete academic CV detailing education, publications, research experience, production AI systems, and technical skills.",
-    fileUrl: assetUrl("./Assets/MD_RAFI_IMAM_CV.pdf"),
+    fileUrl: assetUrl("./docs/MD_RAFI_IMAM_CV.pdf"),
     fileSize: "114 KB",
     date: "July 2026"
   },
@@ -285,7 +285,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     title: "SALLoRA Progress Report",
     category: "Research",
     description: "Comprehensive 7-page technical report on Robust Parameter-Efficient Fine-Tuning for Multimodal Foundation Models under OCR corruption.",
-    fileUrl: assetUrl("./Assets/MD_Rafi_Imam_SALLoRA_Research_Progress_Report.pdf"),
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_SALLoRA_Research_Progress_Report.pdf"),
     fileSize: "200 KB",
     date: "July 21, 2026"
   },
@@ -294,7 +294,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     title: "SALLoRA Research Summary",
     category: "Research",
     description: "Executive 2-page research goal summary featuring the SALLoRA architecture diagram, mathematical formulation, and future PhD roadmap.",
-    fileUrl: assetUrl("./Assets/MD_Rafi_Imam_ResearchSummary.pdf"),
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_ResearchSummary.pdf"),
     fileSize: "150 KB",
     date: "July 2026"
   },
@@ -303,7 +303,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     title: "Selected Publications Overview",
     category: "Research",
     description: "Summary document highlighting individual technical contributions to 4 IEEE ICCIT 2023 papers and current ML systems research interests.",
-    fileUrl: assetUrl("./Assets/MD_Rafi_Imam_Selected_Publications.pdf"),
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_Selected_Publications.pdf"),
     fileSize: "107 KB",
     date: "2023"
   },
@@ -312,7 +312,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     title: "Official GRE General Test Report",
     category: "Test Scores",
     description: "Official ETS score report: Quantitative 164 (63rd %ile), Verbal 140, AWA 3.0. Test date: Sept 20, 2025.",
-    fileUrl: assetUrl("./Assets/MD_Rafi_Imam_GRE.pdf"),
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_GRE.pdf"),
     fileSize: "446 KB",
     date: "Sept 20, 2025"
   },
@@ -321,7 +321,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     title: "Official IELTS Academic Score Report",
     category: "Test Scores",
     description: "Official British Council / IDP IELTS report: Overall Band 7.0 (CEFR C1 Level). Test date: Nov 28, 2025.",
-    fileUrl: assetUrl("./Assets/MD_Rafi_Imam_IELTS.pdf"),
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_IELTS.pdf"),
     fileSize: "1.0 MB",
     date: "Nov 28, 2025"
   },
@@ -330,7 +330,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     title: "RUET Academic Transcript & Certificate",
     category: "Transcript",
     description: "Official RUET B.Sc. in Electrical & Computer Engineering provisional certificate and 4-year grade sheets (CGPA 3.30, Last 60 GPA 3.55).",
-    fileUrl: assetUrl("./Assets/MD_Rafi_Imam_Transcript.pdf"),
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_Transcript.pdf"),
     fileSize: "10.1 MB",
     date: "October 2023"
   }

@@ -56,7 +56,7 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
           </a>
 
           <button
-            onClick={() => onViewPdf("Curriculum Vitae", assetUrl("./Assets/MD_RAFI_IMAM_CV.pdf"))}
+            onClick={() => onViewPdf("Curriculum Vitae", assetUrl("./docs/MD_RAFI_IMAM_CV.pdf"))}
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-base-800 hover:bg-base-750 text-slate-200 font-medium text-sm rounded-lg border border-base-700 transition-all"
           >
             <FileText className="w-4 h-4 text-gold-400" />
