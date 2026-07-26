@@ -5,7 +5,10 @@
  */
 export function assetUrl(relativePath: string): string {
   const base = import.meta.env.BASE_URL;
-  // relativePath comes in as "./Assets/file.pdf" — strip leading "./"
   const clean = relativePath.replace(/^\.\//, '');
-  return `${base}${clean}`;
+  if (base === './' || base === '') {
+    return `./${clean}`;
+  }
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  return `${cleanBase}${clean}`;
 }
