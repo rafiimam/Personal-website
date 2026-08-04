@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
-import { Copy, Check, FileText } from 'lucide-react';
+import { Copy, Check, FileText, BookOpen } from 'lucide-react';
 import { PUBLICATIONS } from '../data/content';
 
 interface PublicationsProps {
   onViewPdf: (title: string, url: string) => void;
 }
 
+// Layman summaries per paper — professor-targeted "what did you actually do?"
+const LAYMAN_SUMMARIES: Record<string, string> = {
+  "docxar-2026": "In plain terms: standard LoRA fine-tuning doesn't know that some of its inputs are garbage. If an OCR engine misreads text, the model still tries to learn from it — corrupting its understanding. I built DocXAR-CUFIT to give the model a 'quality sensor': it identifies which parts of the input are corrupted, down-weights them during training, and uses a cross-attention bridge to route question context to the cleanest document regions. The result is a model that is robust to real-world document noise without needing clean OCR as a prerequisite.",
+  "iccit-suicidal-nlp": "We wanted to build an AI that could flag Reddit posts showing signs of suicidal ideation before a crisis escalates. The challenge: there was no dataset. I scraped and curated original Reddit data from the SuicideWatch and depression subreddits using the Pushshift API, then trained LSTM (for sequence patterns) and Random Forest (for TF-IDF term importance) classifiers side-by-side. Getting to 93% accuracy on a dataset I built from scratch — while ensuring this isn't a false-negative system — was the core engineering challenge.",
+  "iccit-federated-cancer": "Hospitals can't share patient CT scans across institutions for privacy reasons, but an AI trained on just one hospital's data is too narrow. Federated learning solves this: each hospital trains locally, then only sends model weight updates (not patient data) to a central aggregator. I engineered the client-side InceptionV3 feature extractors and the federated aggregation protocol, validating that the global model converged even when each hospital's data distribution was different (non-IID) — exactly the real-world condition federated systems face.",
+  "iccit-yolov8-driving": "Self-driving cars must detect pedestrians, vehicles, and obstacles in real-time — even in the rain or at night. I contributed to adapting YOLOv8 (the state-of-the-art detection architecture) specifically for adverse conditions and benchmarked its inference latency on embedded hardware. The key finding: there's a clear accuracy-latency trade-off that depends heavily on anchor configuration and augmentation strategy in low-light regimes.",
+  "iccit-pcos-ml": "Polycystic Ovary Syndrome (PCOS) is underdiagnosed in emerging healthcare systems because standard diagnosis requires specialist equipment. I applied a comparative ML framework (XGBoost, Random Forest, SVM) to classify PCOS from routine blood test results and hormonal markers. The contribution wasn't just the classifier — it was the feature importance analysis, which identified which biomarkers matter most, giving clinicians a prioritized diagnostic checklist even without the ML model running.",
+};
+
 export const Publications: React.FC<PublicationsProps> = ({ onViewPdf }) => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedBibtex, setExpandedBibtex] = useState<string | null>(null);
+  const [expandedSummary, setExpandedSummary] = useState<string | null>(null);
 
   const categories = ['All', 'Multimodal PEFT', 'NLP', 'Computer Vision', 'Federated Learning', 'Medical AI'];
 
@@ -38,7 +48,7 @@ export const Publications: React.FC<PublicationsProps> = ({ onViewPdf }) => {
               Selected Publications
             </h2>
             <p className="text-sm text-slate-400 mt-2 max-w-xl">
-              IEEE ICCIT 2023 conference papers and ongoing multimodal PEFT preprint research.
+              4 IEEE ICCIT 2023 conference papers and active DocXAR-CUFIT multimodal PEFT research. Each entry includes a plain-language summary and individual contribution breakdown.
             </p>
           </div>
 
@@ -97,6 +107,25 @@ export const Publications: React.FC<PublicationsProps> = ({ onViewPdf }) => {
               <p className="text-sm text-slate-300/90 leading-relaxed mb-4">
                 {pub.abstract}
               </p>
+
+              {/* Layman Summary — collapsible */}
+              {LAYMAN_SUMMARIES[pub.id] && (
+                <div className="mb-4">
+                  <button
+                    onClick={() => setExpandedSummary(expandedSummary === pub.id ? null : pub.id)}
+                    className="flex items-center gap-2 text-[11px] font-mono text-teal-400/80 hover:text-teal-300 transition mb-2"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    {expandedSummary === pub.id ? 'Hide' : 'Show'} Layman Summary
+                  </button>
+                  {expandedSummary === pub.id && (
+                    <div className="bg-teal-400/[0.04] rounded-lg p-4 border border-teal-400/15">
+                      <p className="text-[11px] font-mono text-teal-400/60 uppercase tracking-wider mb-2">Plain-Language Explanation</p>
+                      <p className="text-xs text-slate-300 leading-relaxed">{LAYMAN_SUMMARIES[pub.id]}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Contributions — what professors care about */}
               <div className="bg-base-850 rounded-lg p-4 border border-base-700/30 mb-4">

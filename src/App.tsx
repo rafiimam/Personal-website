@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { ResearchArtifacts } from './components/ResearchArtifacts';
 import { ResearchVision } from './components/ResearchVision';
 import { SalloraVisualizer } from './components/SalloraVisualizer';
 import { Publications } from './components/Publications';
@@ -35,6 +36,7 @@ export const App: React.FC = () => {
 
       <main>
         <Hero onViewPdf={handleViewPdf} />
+        <ResearchArtifacts onViewPdf={handleViewPdf} />
         <ResearchVision />
         <SalloraVisualizer onViewPdf={handleViewPdf} />
         <Publications onViewPdf={handleViewPdf} />

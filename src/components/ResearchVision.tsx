@@ -4,24 +4,29 @@ import { PERSONAL_INFO } from '../data/content';
 export const ResearchVision: React.FC = () => {
   const directions = [
     {
-      area: "Parameter-Efficient Fine-Tuning",
+      area: "Parameter-Efficient Fine-Tuning (PEFT)",
       detail: "Layer-wise LoRA, dynamic rank allocation, and gradient sensitivity masking for adapting frozen foundation models with minimal trainable parameters.",
-      relevance: "Core contribution: SALLoRA framework"
+      relevance: "Core: DocXAR-CUFIT"
     },
     {
       area: "Robustness under Structured Input Corruption",
       detail: "Moving beyond noisy-label assumptions to structured noisy-input paradigms — OCR degradation, missing modalities, and sensor noise during adaptation.",
-      relevance: "Novel problem formulation"
+      relevance: "Novel paradigm"
     },
     {
       area: "Multimodal Vision-Language Models",
       detail: "Adapting LayoutLM, CLIP, and LLaVA-style backbones for document understanding, visual reasoning, and cross-modal alignment in uncurated data.",
-      relevance: "Direct application to document AI"
+      relevance: "Document AI application"
     },
     {
       area: "Efficient & Deployable AI Systems",
       detail: "Low-rank adaptation pipelines, memory-efficient training, and hardware-aware inference. Bridging fundamental research with production deployment.",
       relevance: "Industry + research bridge"
+    },
+    {
+      area: "Federated & Distributed Optimization",
+      detail: "Extending PEFT adaptation to privacy-preserving federated settings — non-IID data, communication-efficient aggregation, and fault-tolerant distributed workflows. Grounded in production Kafka event-driven pipeline experience.",
+      relevance: "Emerging research direction"
     },
   ];
 
@@ -50,7 +55,10 @@ export const ResearchVision: React.FC = () => {
                 Classical robust learning assumes clean inputs with corrupted labels. My research inverts this paradigm: I study how to adapt frozen foundation models when the <em className="text-white not-italic font-medium">multimodal inputs themselves</em> are structurally degraded — without requiring clean reference data at training time.
               </p>
               <p>
-                This has led to <span className="text-gold-300 font-semibold">SALLoRA</span> (Sensitivity-Aware Layer-wise LoRA), a parameter-efficient fine-tuning framework that combines gradient sensitivity masking, learnable layer scaling, and decoupled quality estimation to maintain adaptation quality under up to 50% structured OCR corruption.
+                This has led to <span className="text-gold-300 font-semibold">DocXAR-CUFIT</span> (Cross-Attention Adapters + Curriculum Fine-Tuning), a parameter-efficient fine-tuning framework combining layer-wise sensitivity masking, cross-attention adapters, and a decoupled quality estimator. Evaluated on FUNSD under 50% OCR corruption: <span className="text-gold-300 font-mono font-semibold">Mean F1 0.7992 ± 0.0067</span> — a +26.2% gain over standard noisy LoRA adaptation.
+              </p>
+              <p>
+                My enterprise experience building <span className="text-teal-300 font-medium">Apache Kafka event-driven data pipelines</span> at Jamuna Bank creates a direct bridge to federated and distributed optimization research — I understand non-IID data distributions, async aggregation, and fault-tolerant workflow orchestration not just theoretically, but from having engineered them at production scale.
               </p>
             </div>
 

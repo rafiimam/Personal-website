@@ -15,9 +15,9 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
       <div className="absolute top-20 right-1/4 w-[400px] h-[400px] bg-teal-400/[0.03] rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10">
-        {/* Admissions context — subtle, not a flashy badge */}
+        {/* Identity label — research-first framing */}
         <p className="text-xs font-mono tracking-widest uppercase text-gold-400/80 mb-6">
-          Prospective Ph.D. Candidate — Fall 2027
+          AI Research Engineer · Multimodal Foundation Models · Prospective Ph.D. 2027
         </p>
 
         {/* Name & identity */}
@@ -46,12 +46,12 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
         </div>
 
         {/* Primary CTAs — what a professor would click */}
-        <div className="flex flex-wrap gap-3 mb-16">
+        <div className="flex flex-wrap gap-3 mb-8">
           <a
             href="#sallora"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold-400 hover:bg-gold-300 text-base-900 font-semibold text-sm rounded-lg transition-all shadow-lg shadow-gold-400/10 hover:shadow-gold-400/20"
           >
-            Read My Research
+            DocXAR-CUFIT Research
             <ArrowRight className="w-4 h-4" />
           </a>
 
@@ -81,6 +81,23 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
           >
             ResearchGate
             <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        {/* Quick-access artifacts for professors scanning the page */}
+        <div className="flex flex-wrap gap-2 mb-12">
+          <span className="text-[11px] font-mono text-slate-600 self-center mr-1">Quick access:</span>
+          <a href="#artifacts" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-gold-300 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-gold-400/30 transition">
+            Research Interest Summary
+          </a>
+          <a href="#artifacts" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-teal-300 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-teal-400/30 transition">
+            DocXAR-CUFIT Report
+          </a>
+          <a href="#enterprise-ai" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-slate-200 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-slate-500/40 transition">
+            Enterprise AI Profile
+          </a>
+          <a href="#publications" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-slate-200 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-slate-500/40 transition">
+            4 IEEE Publications
           </a>
         </div>
 
