@@ -19,9 +19,10 @@ export const Navbar: React.FC<NavbarProps> = () => {
 
   const navLinks = [
     { label: "Research", href: "#research" },
-    { label: "SALLoRA", href: "#sallora" },
+    { label: "DocXAR", href: "#sallora" },
     { label: "Publications", href: "#publications" },
     { label: "Industry", href: "#industry" },
+    { label: "Enterprise AI", href: "#enterprise-ai" },
     { label: "Credentials", href: "#credentials" },
     { label: "Documents", href: "#documents" },
   ];

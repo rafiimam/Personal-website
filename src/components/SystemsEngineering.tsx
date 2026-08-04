@@ -1,4 +1,5 @@
 import React from 'react';
+import { ExternalLink } from 'lucide-react';
 import { WORK_EXPERIENCE } from '../data/content';
 
 export const SystemsEngineering: React.FC = () => {
@@ -41,7 +42,7 @@ export const SystemsEngineering: React.FC = () => {
         </h2>
 
         <p className="text-sm text-slate-400 max-w-2xl mb-10">
-          Designing and deploying production AI systems in Linux environments — combining vision-OCR models with event-driven architectures at enterprise scale.
+          Designing and deploying production AI systems in Linux environments — combining Swin-B Transformers, ArcFace, and physics-informed models with event-driven architectures at enterprise scale. The Face Liveness & PAD system is detailed in the <a href="#enterprise-ai" className="text-gold-300 hover:text-gold-200 transition">Enterprise AI section ↓</a>
         </p>
 
         {/* Current role card */}
@@ -97,8 +98,15 @@ export const SystemsEngineering: React.FC = () => {
             Why This Matters for Research
           </p>
           <p className="text-sm text-slate-300/90 leading-relaxed">
-            This production experience directly informs my research perspective: I understand the real-world noise conditions (OCR degradation, network latency, data quality variance) that motivate robust adaptation methods. My ability to implement, benchmark, and deploy ML systems end-to-end makes me a self-sufficient and productive research contributor from day one.
+            This production experience directly informs my research perspective: I understand the real-world noise conditions (OCR degradation, network latency, mobile capture artifacts, OOD physical attacks) that motivate robust adaptation methods. My ability to implement, benchmark, and deploy ML systems end-to-end — including the Face Liveness & PAD system described below — makes me a self-sufficient and immediately productive research contributor.
           </p>
+          <a
+            href="#enterprise-ai"
+            className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-gold-300 hover:text-gold-200 transition"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            See Face Liveness & PAD System details ↓
+          </a>
         </div>
       </div>
     </section>

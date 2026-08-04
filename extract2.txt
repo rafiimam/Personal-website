@@ -1,0 +1,68 @@
+﻿DocXAR RESULTS (3800 to end):
+lity is the cornerstone of PEFT research, particularly when noise models introduce high variance across training runs. We
+conducted multi-seed evaluations on LayoutLMv3 using the FUNSD dataset under 50% synthetic OCR corruption (evaluating Seeds 42, 123, and
+2024). DocXAR-CUFIT achieved a highly stable Mean Test F1 Score of 0.7992 ┬▒ 0.0067 (Peak Seed 123 F1: 0.8067), representing a massive
++26.2% relative improvement over standard noisy LoRA adaptation (~0.6334).
+Figure 2: FUNSD Multi-Seed Benchmark Results comparing Reference, Noisy LoRA, and DocXAR-CUFIT Seed Runs.
+4. FUTURE VISION: UNIMOE-PEFT (UNCERTAINTY-GATED MIXTURE-OF-EXPERTS)
+The next stage of this research involves transitioning from sample-level scalar reweighting to token-level cross-modal uncertainty routing through
+UniMoE-PEFT (Uncertainty-Gated Mixture-of-Experts).
+4.1 Token-Level Modality Discrepancy Index (TMDI)
+t
+We are formulating a Token-Level Modality Discrepancy Index (TMDI) leveraging cross-attention maps and Gaussian region uncertainty. By
+t
+modeling visual bounding boxes as a mixture of Gaussians, TMDI quantifies fine-grained OCR degradation at the individual token level, identifying
+t
+exactly where visual text rendering diverges from extracted OCR tokens.
+4.2 Noise-Gated MoE Router & PAC-Bayesian Bounds
+The TMDI metric feeds directly into a noise-gated router that dynamically directs clean tokens to specialized text experts while routing corrupted
+t
+tokens to visual-spatial experts. Mathematically, this formulation is constrained by PAC-Bayesian generalization bounds of order O((cid:214)(k/n)), proving
+that sparse parameter adaptation under input noise maintains bounded generalization error.
+Summary Conclusion & Industry Impact: DocXAR-CUFIT proves that parameter-efficient adaptation can recover from severe input corruption
+without full backbone retraining or clean OCR dependencies. This enables fault-tolerant Document AI deployment in edge and enterprise
+environments where high-fidelity OCR is computationally prohibitive. Future work on UniMoE-PEFT extends these principles to general multimodal
+foundation models.
+MD. Rafi Imam | Independent Research Summary Page 2 of 2
+
+============================================================
+NLP SUICIDAL (abstract + contributions):
+2023 26th International Conference on Computer and Information Technology (ICCIT)
+13-15 December, CoxΓÇÖs Bazar, Bangladesh
+Suicidal Thought Detection Using NLP(Natural
+Language Processing) on Reddit Data
+MD. Rafi Imam1, Oishi Jyoti2, Zakia Afrin3, Md. Munawar Hossain4, and Tamanna Hossain Mou5
+1,2,3,4,5Department of Electrical & Computer Engineering
+1,2,3,4,5Rajshahi University of Engineering & Technology
+Rajshahi-6204, Bangladesh
+rafiimam96@gmail.com1, oj.ruet@gmail.com2, afrinnina49@gmail.com3 munawark7@gmail.com4,and tamannamou128@gmail.com5
+AbstractΓÇöOurstudyharnessesthepowerofNLPtocontribute 3 outlines the methodology, emphasizing the use of NLP
+totheidentificationofsuicidalideationintextdata.Intherealm approaches.InSection4,thepaperdetailstheimplementation
+of mental health, identification of suicidal ideation at an early
+oftheTF-IDFmodel.Section5discussesresults,highlighting
+stage is of paramount importance for suicide prevention efforts.
+thesignificanceofNLPinaddressingmentalhealthchallenges
+Thispaperpresentsanovelapproachtosuicideideationdetection
+usingNaturalLanguageProcessing(NLP)techniques.Facedwith through social media analysis. In conclusion (Section 6), the
+a dearth of publicly available datasets for this critical task, research underscores the value of this approach for suicide
+we have contributed a valuable resource by curating a dataset prevention initiatives in the digital age.
+from the ΓÇ¥SuicideWatchΓÇ¥ and ΓÇ¥depressionΓÇ¥ subreddits on the
+Redditplatform,collectedviathePushshiftAPI.Specifically,we II. RELATEDWORKS
+employ the LSTM and a Random Forest classifier separately
+to achieve promising results in this vital area of research. In [7], TFIDF and BoW are used in tandem to precisely
+This work not only advances the field of NLP-based suicide differentiate between positive and negative tweets. They dis-
+ideation detection but also contributes a valuable dataset for covered that by utilizing the TF-IDF vectorizer, the precision
+future investigations, potentially saving time and resources for
+of sentiment analysis can be greatly improved and simulation
+researchers and professionals dedicated to the prevention of
+results demonstrate the efficiency of our suggested method.
+suicideandtheimprovementofmentalhealth.Wecouldachieve
+up to 93% accuracy in suicidal thought analysis using NLP Using the NLP approach, we achieved 85.25% accuracy in
+techniques. sentiment analysis. In [8], The author provided an auto-
+Index TermsΓÇöNLP, Reddit, Pushshiftf, API, LSTM, Random mated conversational platform that was utilized to identify
+Forest Classifier. depression-relatedrisksasapreliminarystrategy.Theplatform
+was designed to interpret conversations through NLP and
+I. INTRODUCTION
+machinelearning.Thesuggestedtwo-phasedplatformΓÇÖsinitial
+In the contemporary digital landscape, social networking phase would examine discussion and sort related emotions
+sites have emerged as global agora, reshaping communication into four categories: ΓÇ¥happy,ΓÇ¥ ΓÇ¥neutral,ΓÇ¥ ΓÇ¥depressi

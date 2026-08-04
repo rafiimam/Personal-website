@@ -1,0 +1,107 @@
+﻿============================================================
+DOCUMENT: DocXAR Summary (full)
+RESEARCH SUMMARY: DocXAR-CUFIT & UniMoE-PEFT | MD. Rafi Imam LayoutLMv3 & Multimodal Robustness
+DocXAR-CUFIT & UniMoE-PEFT: Robust Parameter-Efficient Fine-Tuning
+for Multimodal Foundation Models
+MD. Rafi Imam | Software Development Officer (AI & Automation), Jamuna Bank PLC
+Email: rafiimam96@gmail.com | Portfolio: rafiimam.github.io/Personal-website/ | B.Sc. ECE, RUET (3.55 Last-60 GPA) | GRE Quant: 164 |
+IELTS: 7.0
+SUMMARY: This report outlines the development and validation of the DocXAR-CUFIT framework, designed to mitigate structured OCR noise in
+Multimodal Document Understanding (MDU). By integrating Layer-Wise Sensitivity Masking, Cross-Attention Adapters, and a Decoupled Quality
+Estimator, the framework recovers significant performance degradation caused by noisy inputs. Multi-seed evaluations on the FUNSD dataset under
+50% synthetic OCR corruption demonstrate a highly stable Mean Test F1 Score of 0.7992 ┬▒ 0.0067, offering a paradigm-shifting improvement over
+standard noisy LoRA adaptation (~0.6334).
+1. PROBLEM FRAMING AND RESEARCH HYPOTHESIS
+The evolution of Multimodal Foundation Models (MFMs) has necessitated a strategic pivot from addressing classical "noisy-label" learningΓÇöwhere
+ground-truth labels are corruptedΓÇöto the more arduous domain of noisy-input adaptation. Within Multimodal Document Understanding (MDU),
+structured OCR noise represents a critical failure point. Unlike stochastic pixel noise, OCR degradation selectively erodes the linguistic coherence of
+tokens while preserving visual-spatial layout features, creating a modality misalignment that standard Parameter-Efficient Fine-Tuning (PEFT)
+methods fail to adjudicate.
+Standard LoRA updates weights uniformly without regard for the reliability of input modalities, leading to a "garbage-in, garbage-out" propagation
+across the transformer backbone. DocXAR-CUFIT addresses this by combining cross-attention adapters with layer-wise sensitivity masking,
+enforcing a uniform 25% active parameter density to isolate clean visual-spatial signals and prevent rank collapse under severe text degradation.
+2. TECHNICAL METHODOLOGY: REFINEMENTS IN DOCXAR-CUFIT
+Maintaining model stability during the fine-tuning of 12-layer transformer blocks requires precise calibration of gradient flow. Without structural
+constraints, models often succumb to global gradient starvation, where specific layers saturate early. DocXAR-CUFIT introduces three core
+architectural mechanisms:
+(cid:127) Layer-Wise Sensitivity Masking: Enforces a uniform 25.0% active parameter density across all transformer blocks via tensor-by-tensor
+thresholding.
+(cid:127) Cross-Attention Adapter: Connects question embeddings directly to document key-value pairs after the final encoder block, filtering out
+non-relevant corrupted spans.
+(cid:127) Decoupled Quality Estimator Q(x): Evaluates per-sample input corruption under torch.no_grad() with batch normalization to prevent weight
+collapse.
+Figure 1: DocXAR-CUFIT Architectural Pipeline detailing input masking, cross-attention adaptation, and quality estimation.
+Metric / Parameter Pre-Registration Status Post-Registration Refined Status Architectural Impact
+Active LoRA Density Global (Unconstrained) 25.0% (Uniform Layer-wise) Prevents Rank Collapse
+Residual Scalar (s) Frozen (s = 1.0) Active / Unfrozen Dynamic Layer Reweighting
+l l
+Avg. LoRA Weight Norm 2.308 3.8517 (+66.9%) Expands Noise Capacity
+Span Selection Strategy Greedy Selection Top-K Re-Ranked Filters OCR Span Errors
+Table 1: System Refinements and Parameter Norm Expansion under DocXAR-CUFIT.
+MD. Rafi Imam | Independent Research Summary Page 1 of 2
+RESEARCH SUMMARY: DocXAR-CUFIT & UniMoE-PEFT | MD. Rafi Imam LayoutLMv3 & Multimodal Robustness
+3. EXPERIMENTAL RESULTS & MULTI-SEED VALIDATION
+Statistical reproducibility is the cornerstone of PEFT research, particularly when noise models introduce high variance across training runs. We
+conducted multi-seed evaluations on LayoutLMv3 using the FUNSD dataset under 5
+
+============================================================
+DOCUMENT: Updated SALLoRA
+MD. Rafi Imam
+Prospective PhD Applicant (Fall 2027)
+#rafiimam96@gmail.com DResearchGate ┬ºGitHub
+Research Progress Report:
+Robust Parameter-Efficient Fine-Tuning for Multimodal
+Foundation Models under Structured Input Corruption
+CurrentFocus: MultimodalDocumentUnderstanding(MDU)Robustness
+CoreMethodology: DocXAR-CUFIT(Sensitivity-AwareLow-RankAdaptation)onLayoutLMv3
+August1,2026
+Executive Summary: ThisreportoutlinesthedevelopmentandvalidationoftheDocXAR-
+CUFITframework,designedtomitigatestructuredOCRnoiseinMultimodalDocument
+Understanding (MDU). By integrating Layer-Wise Sensitivity Masking, Cross-Attention
+Adapters,andaDecoupledQualityEstimator,theframeworkrecoverssignificantperfor-
+mancedegradationcausedbynoisyinputs. Multi-seedevaluationsontheFUNSDdataset
+under 50% synthetic OCR corruption demonstrate a highly stable Mean Test F1 Score of
+0.7992┬▒0.0067,offeringaparadigm-shiftingimprovementoverstandardnoisyLoRAadap-
+tation.
+1 Problem Framing and Research Hypothesis
+TheevolutionofMultimodalFoundationModels(MFMs)hasnecessitatedastrategicpivotfrom
+addressing classical ΓÇ£noisy-labelΓÇ¥ learningΓÇöwhere the ground-truth is corruptedΓÇöto the more
+arduous domain of ΓÇ£noisy-inputΓÇ¥ adaptation. Within Multimodal Document Understanding
+(MDU),structuredOCRnoiserepresentsacriticalfailurepoint. Unlikestochasticpixelnoise,OCR
+degradationselectivelyerodesthelinguisticcoherenceoftokenswhilepreservingvisual-spatial
+layoutfeatures,creatingamodalitymisalignmentthatstandardParameter-EfficientFine-Tuning
+(PEFT)methodsfailtoadjudicate. StandardLoRA,forinstance,updatesweightsuniformlywithout
+regardforthereliabilityofinputmodalities,leadingtoaΓÇ£garbage-in,garbage-outΓÇ¥propagation
+acrossthetransformerbackbone.
+This research proposes the DocXAR-CUFIT framework, an integration of Cross-Attention
+AdaptersandCurriculumFine-tuning,tomitigatethesebottlenecks. Wehypothesizethatsensitivity-
+aware adaptationΓÇöwhich explicitly models the interaction between question embeddings and
+documentregionsΓÇöcansignificantlyrecoverperformanceunder50%syntheticOCRcorruptionon
+theFUNSDdataset. ByleveragingtheinherentrobustnessoftheLayoutLMv3backboneΓÇÖsUnified
+TextandImageMasking,ourmethodologyidentifiessalient,cleanfeaturestoguidetheadaptation
+ofnoisyspans.
+1
+IndustryImpact: Solvingthisrepresentsacrucialenablingfactorfortheindustry. Itfacilitates
+thedeploymentofhigh-performanceDocumentAIinresource-constrainededgeenvironments
+where high-fidelity OCR is computationally prohibitive or unavailable, ensuring fault-tolerant
+performanceinreal-worlddigitizationpipelines.
+2 Technical Methodology: Refinements in DocXAR-CUFIT
+Maintainingmodelstabilityduringthefine-tuningof12-layertransformerblocksrequiresprecise
+calibration of gradient flow. Without structural constraints, models often succumb to ΓÇ£global
+gradient starvation,ΓÇ¥ where specific layers saturate early, leading to an uneven distribution of
+learningcapacityandarchitecturalinstability.
+2.1 Layer-Wise Sensitivity Masking & Cross-Attention
+We implemented Layer-Wise Sensitivity Masking utilizing tensor-by-tensor thresholding. This
+refinementensuresauniformΓê╝25%activeLoRAparameterdensityacrossallblocks,preventing
+theΓÇ£rankcollapseΓÇ¥observedinglobalthresholdingapproaches. BuildingontheDocXAR-LoRA
+architecture, we integrated a Cross-Attention Adapter after the final encoder layer. This allows
+questiontokenstoactasqueries(Q)thatdirectlyattendtodocumenttokensaskeys(K)andvalues
+(V),forcingthemodeltoproducequestion-awarerepresentationsthateffectivelyignorecorrupted,
+non-relevantOCRspans.
+2.2 Decoupled & Batch-Normalized Quality Estimator Q(x)
+Tohandlehigh-noiseregimes,wedevelopedaDecoupledQualityEstimator Q(x). Byapplying
+torch.no_grad()totheestimatorandenforcingBatchNormalizationwithameantargetof1.0,
+we prevented quality weight collapse and loss-scale dampening. In accordance with D-MoLE
+(DynamicMixtureofExperts)principles,thisbatchnormalizationspecificallyaddressesΓÇ£modality
+imbalance,ΓÇ¥ensuringthatthemodeldoesnotover-indexonvisuallayoutfeatureswhentex
+
