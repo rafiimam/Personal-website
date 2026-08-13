@@ -5,28 +5,28 @@ export const ResearchVision: React.FC = () => {
   const directions = [
     {
       area: "Parameter-Efficient Fine-Tuning (PEFT)",
-      detail: "Layer-wise LoRA, dynamic rank allocation, and gradient sensitivity masking for adapting frozen foundation models with minimal trainable parameters.",
-      relevance: "Core: DocXAR-CUFIT"
+      detail: "LoRA, layer-wise learnable scaling, and soft gradient masking for adapting frozen foundation models with minimal trainable parameters under structured input corruption.",
+      relevance: "Core: SALLoRA"
     },
     {
       area: "Robustness under Structured Input Corruption",
-      detail: "Moving beyond noisy-label assumptions to structured noisy-input paradigms — OCR degradation, missing modalities, and sensor noise during adaptation.",
-      relevance: "Novel paradigm"
+      detail: "Moving beyond noisy-label assumptions to structured noisy-input paradigms — OCR degradation, missing modalities, and spatially-localized token corruption during PEFT adaptation.",
+      relevance: "Novel problem formulation"
     },
     {
-      area: "Multimodal Vision-Language Models",
-      detail: "Adapting LayoutLM, CLIP, and LLaVA-style backbones for document understanding, visual reasoning, and cross-modal alignment in uncurated data.",
-      relevance: "Document AI application"
+      area: "Multimodal Systems & NLP",
+      detail: "Adapting LayoutLM-style backbones for document understanding. Prior work on NLP-based mental health detection (suicidal ideation, 93% accuracy) and multimodal visual systems.",
+      relevance: "Application domain"
     },
     {
-      area: "Efficient & Deployable AI Systems",
-      detail: "Low-rank adaptation pipelines, memory-efficient training, and hardware-aware inference. Bridging fundamental research with production deployment.",
+      area: "AI Systems Engineering",
+      detail: "Real-time ML inference systems, async GPU orchestration, hot-reloadable PEFT weight updates, and event-driven data streaming. Bridging fundamental research with production deployment.",
       relevance: "Industry + research bridge"
     },
     {
-      area: "Federated & Distributed Optimization",
-      detail: "Extending PEFT adaptation to privacy-preserving federated settings — non-IID data, communication-efficient aggregation, and fault-tolerant distributed workflows. Grounded in production Kafka event-driven pipeline experience.",
-      relevance: "Emerging research direction"
+      area: "Federated & Distributed Systems",
+      detail: "Prior IEEE work on federated learning for lung cancer classification under non-IID data. Enterprise experience with Kafka event-driven pipelines informs distributed optimization research direction.",
+      relevance: "Emerging direction"
     },
   ];
 
@@ -55,10 +55,10 @@ export const ResearchVision: React.FC = () => {
                 Classical robust learning assumes clean inputs with corrupted labels. My research inverts this paradigm: I study how to adapt frozen foundation models when the <em className="text-white not-italic font-medium">multimodal inputs themselves</em> are structurally degraded — without requiring clean reference data at training time.
               </p>
               <p>
-                This has led to <span className="text-gold-300 font-semibold">DocXAR-CUFIT</span> (Cross-Attention Adapters + Curriculum Fine-Tuning), a parameter-efficient fine-tuning framework combining layer-wise sensitivity masking, cross-attention adapters, and a decoupled quality estimator. Evaluated on FUNSD under 50% OCR corruption: <span className="text-gold-300 font-mono font-semibold">Mean F1 0.7992 ± 0.0067</span> — a +26.2% gain over standard noisy LoRA adaptation.
+                This has led to <span className="text-gold-300 font-semibold">SALLoRA</span> (Sensitivity-Aware Layer-wise LoRA), which combines a linear-probing warm-up, layer-wise learnable scaling, token-level quality weighting, and soft sensitivity masking. Evaluated on FUNSD under 50%–80% OCR corruption: SALLoRA achieves <span className="text-gold-300 font-mono font-semibold">F1 0.7996±0.0031</span> at 50% and <span className="text-gold-300 font-mono font-semibold">F1 0.7786±0.0064</span> at 80% noise — all improvements statistically significant (p&lt;0.05, paired t-tests across 3 seeds).
               </p>
               <p>
-                My enterprise experience building <span className="text-teal-300 font-medium">Apache Kafka event-driven data pipelines</span> at Jamuna Bank creates a direct bridge to federated and distributed optimization research — I understand non-IID data distributions, async aggregation, and fault-tolerant workflow orchestration not just theoretically, but from having engineered them at production scale.
+                My enterprise experience deploying <span className="text-teal-300 font-medium">SALLoRA background workers</span> in production at Jamuna Bank PLC — and engineering <span className="text-teal-300 font-medium">Apache Kafka event-driven pipelines</span> — creates a direct bridge to federated and distributed optimization research: I understand non-IID data, async aggregation, and fault-tolerant workflows not just theoretically, but from having built them under real operational constraints.
               </p>
             </div>
 

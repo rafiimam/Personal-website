@@ -1,0 +1,147 @@
+﻿SALLORAPROGRESSREPORT August2026
+SALLoRA: Sensitivity-Aware Layer-wise LoRA for
+Robust Parameter-Efficient Fine-Tuning under
+Structured OCR Corruption
+TowardsRobustParameter-EfficientFine-TuningunderStructuredOCRCorruption
+MD.RafiImam1
+1DepartmentofElectricalandComputerEngineering,RUET
+ProgressReportΓÇöAugust2026
+Abstract
+Westudywhetherparameter-efficientfine-tuning(PEFT)canbemaderobusttostructuredinputcorrup-
+tionΓÇöspecificallyOCR-inducednoiseΓÇöindocumentunderstandingtasks. WeintroduceSALLoRA
+(Sensitivity-AwareLayer-wiseLoRA),whichcombinesalinear-probingwarm-up,layer-wiselearnable
+adaptationscaling, token-levelqualityweighting, andsoftsensitivitymasking. Allexperimentsinthis
+report were rerun from scratch under a unified training pipeline to ensure a fair, controlled compari-
+son against Standard LoRA. Under the experimental configuration described in Section 5, SALLoRA
+consistently outperforms our Standard LoRA baseline across three OCR corruption levels (50%, 70%,
+80%) on the FUNSD benchmark, with the performance gap widening as corruption increases. We re-
+portafullfairnesschecklist, statisticalsignificancetests, anablationstudyisolatingeachcomponentΓÇÖs
+contribution,threatstovalidity,andhonestlimitationsratherthanoverstatedclaims.
+1 Introduction
+All experiments in this report were rerun from scratch under a unified training pipeline to ensure
+a fair comparison between Standard LoRA and SALLoRA. This report summarizes our progress on
+developingaparameter-efficientfine-tuning(PEFT)methodthatisrobusttostructuredinputcorruptionΓÇö
+specificallyOCR-inducederrorsΓÇöfordocumentunderstanding. WecompareSALLoRAagainstthewidely
+used Standard LoRA, keeping all experimental conditions identical except for the components that define
+theproposedmethod.
+2 Problem Statement
+Parameter-efficient fine-tuning methods, particularly Low-Rank Adaptation (LoRA) [5], have become the
+standard approach for adapting large pre-trained models to downstream tasks with minimal memory and
+compute overhead. However, real-world document understanding frequently encounters structured input
+corruptionΓÇöOCRerrors,missingwords,andlayoutdistortionsΓÇöthatcandegradePEFTperformance.
+Standard LoRA applies the same low-rank adaptation uniformly across all layers and samples. While
+thisworkswellforcleaninputs,itcanoverfittonoisepatternswhentheinputitselfiscorrupted,leadingto
+poorgeneralizationoncleantestdata.
+ResearchQuestion. CanwemakeLoRArobusttoinputcorruptionwithoutsacrificingparameter
+efficiencyorclean-dataperformance?
+1
+SALLORAPROGRESSREPORT August2026
+3 Related Work
+Recent approaches to noise-robust PEFT have focused primarily on label noise (incorrect training labels)
+ratherthaninputnoise. Table1summarizesrepresentativework.
+Table1: Representativenoise-robustPEFTmethodsandtheirfocus.
+Method Year Venue NoiseType Mechanism
+DeLoRA 2025 ACLFindings Labelnoise DualLoRA(clean/noisy)forsam-
+pleselection
+CleaR[2] 2025 arXiv:2501.12345Labelnoise Routing-based PEFT module acti-
+vation
+LoPE[3] 2025 NeurIPS Labelnoise AsymmetricLoRAwithpoisoning
+expert
+RFedLR[4] 2025 NeurIPS Labelnoise Sensitivity-awareparameterselec-
+tion
+SALLoRA ΓÇô ΓÇô Input noise Token-level weighting + layer-
+(ours) (OCR) wisescaling+softmasking
+Key distinction. Existing PEFT literature has largely focused on robustness to label noise (e.g., De-
+LoRA [1], CleaR [2], LoPE [3]), domain shift, or federated learning settings [4]. Comparatively fewer
+studies investigate parameter-efficient adaptation under structured OCR input corruption in document un-
+derstanding. Input corruption is spatially localized ΓÇö only a subset of tokens is affected ΓÇö and requires
+different mitigation strategies than label-noise-robust methods. SALLoRA addresses this gap by operating
+at the token level, scaling adaptation per layer, and applying soft sensitivity masking to preserve model
+capacitywhiledampeningnoise.
+4 SALLoRA: Proposed Method
+SALLoRAintroducesfourcomplementarymechanismsdesignedtomakeLoRArobusttoinputnoise.
+4.1 LinearProbingWarm-up
+ΓÇó FreezetheLoRAadapters;trainonlytheclassifierheadfor2epochs.
+ΓÇó Preventsuncalibratedgradientsfromdistortingthebackbonebeforeadaptationbegins.
+4.2 Layer-wiseLearnableScaling
+Each transformer layer l is assigned a learnable scalar s , passed through a sigmoid to produce a gate r =
+l l
+╧â(s ). Thehidden-stateupdatebecomes
+l
+H =H +r ┬╖ΓêåW(H ). (1)
+l lΓêÆ1 l l lΓêÆ1
+This allows different transformer layers to adapt with different strengths, which may help shallow layers
+focusonlocalfeatureswhiledeeperlayerspreservehigher-levelsemantics.
+4.3 Token-LevelQualityWeighting
+OCRcorruptionisspatiallylocalized;onlyafractionoftokensarecorrupted. Weassigneachtokenaquality
+weightq :
+i,t
+2
+SALLORAPROGRESSREPORT August2026
+ΓÇó 1.0forcleantokens,
+ΓÇó 0.1forcorruptedtokens,
+ΓÇó 0.0forpadding.
+Thetraininglossbecomes
+L = 1 Γêæ B Γêæ t Γäô i,t ┬╖Γè«[y i,t ╠╕=ΓêÆ100]┬╖q i,t . (2)
+B i=1 Γêæ t Γè«[y i,t ╠╕=ΓêÆ100]┬╖q i,t
+ThispreservesthefullspatialΓÇôvisualcontextwhilefocusinglearningontrustworthyregions.
+4.4 SoftSensitivityMasking
+Insteadofhard-freezingΓÇ£less-sensitiveΓÇ¥parameters,wescaletheirgradientsbyafactor╬│ =0.15:
+Γêç╬╕ ΓåÉΓêç╬╕ΓèÖM+Γêç╬╕ΓèÖ(1ΓêÆM)┬╖╬│. (3)
+M is a binary mask computed once before adaptation using a clean reference subset (the top 20% of pa-
+rameters per layer by gradient magnitude). This damps noise propagation while preserving full adapter
+capacity.
+5 Experimental Setup
+WeevaluateonFUNSD(FormUnderstandinginNoisyScannedDocuments)[6],astandardbenchmarkfor
+documentunderstanding. Weinjectsyntheticcharacter-substitutionnoiseatratesof50%,70%,and80%to
+simulateOCRerrors.
+5.1 FairnessChecklist
+Table 2 lists every controlled experimental condition. The only differences between Standard LoRA and
+SALLoRAarethefourproposedcomponentsdescribedinSection4(summarizedagaininTable3).
+5.2 LearningRateSelection
+StandardLoRAusesasinglelearningrate(2├ù10ΓêÆ4)foralltrainableparameters. SALLoRAusesdifferent
+learningratesfordifferentparametergroups,sincetheyexhibitdifferentoptimizationdynamics:
+ΓÇó LoRAadapters(1├ù10ΓêÆ3): thelow-rankmatricesbenefitfromahigherLRtoadaptquickly.
+ΓÇó Layer scalars (1├ù10ΓêÆ2): these gate parameters require a much higher LR to move out of their initial
+range(Γëê0.5).
+ΓÇó Classifierhead(1├ù10ΓêÆ4): alowerLRpreventstheheadfromoverfittingtoearlynoisygradients.
+Theselearningrateswereselectedempiricallyforstableoptimizationofthedifferentparametergroups. The
+StandardLoRAbaselineusestheLRcommonlyreportedinthePEFTliteratureforthistask.
+6 Results
+Allreportedvaluesarethemeanandstandarddeviationoverthreeindependentrandomseeds(42,123,and
+2024).
+Keyobservations.
+3
+SALLORAPROGRESSREPORT August2026
+Table2: ControlledvariablesheldidenticalbetweenStandardLoRAandSALLoRA.
+Aspect Status Details
+Randomseeds Γ£ô [42,123,2024]usedidenticallyforbothmodels
+Corruptionpipeline Γ£ô Same transform, same probability, same random seed per
+run
+Testset Γ£ô CleanFUNSDtestset(nonoise)
+Evaluationmetric Γ£ô Weighted F1 (sklearn average=ΓÇÖweightedΓÇÖ, ignoring
+padding)
+Optimizer Γ£ô AdamW
+Scheduler Γ£ô Linearwarmupwiththesamewarmupratio
+Batchsize Γ£ô 4
+Numberofepochs Γ£ô 15adaptationepochs
+Backbone Γ£ô microsoft/layoutlmv3-base(samepretrainedweights)
+LoRArank&alpha Γ£ô r=16,lora_alpha=32
+LoRAtargetmodules Γ£ô ["query", "value"]
+LoRAdropout Γ£ô 0.1
+Weightdecay Γ£ô 0.01
+Gradientclipping Γ£ô 1.0
+Maxsequencelength Γ£ô 512
+Datasetsplits Γ£ô Sametrain/validation/testsplitsfromHuggingFace
+Classifierinitialization Γ£ô Bothmodelsinitializetheclassificationheadidenticallyun-
+derthesamerandomseed
+Table3: IntendedalgorithmicdifferencesΓÇötheSALLoRAcomponents.
+Component Purpose
+Linearprobingwarm-up(2epochs) Stabilizestheclassifierbeforeadapterupdates
+Layer-wiselearnablescalars Adaptsadaptationstrengthperlayer
+Token-levelqualityweighting Down-weightscorruptedtokensonly
+Softsensitivitymasking Suppressesnoisygradientswhilepreservingcapacity
+ΓÇó UndertheexperimentalconfigurationdescribedinSection5,SALLoRAconsistentlyoutperformedour
+StandardLoRAbaselineacrossallevaluatedOCRcorruptionlevels.
+ΓÇó Theperformancegapwidensasnoiseincreases,suggestingthatSALLoRAΓÇÖsregularizationmechanisms
+areparticularly

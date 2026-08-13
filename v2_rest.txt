@@ -1,0 +1,164 @@
+﻿daptationepochs
+Backbone Γ£ô microsoft/layoutlmv3-base(samepretrainedweights)
+LoRArank&alpha Γ£ô r=16,lora_alpha=32
+LoRAtargetmodules Γ£ô ["query", "value"]
+LoRAdropout Γ£ô 0.1
+Weightdecay Γ£ô 0.01
+Gradientclipping Γ£ô 1.0
+Maxsequencelength Γ£ô 512
+Datasetsplits Γ£ô Sametrain/validation/testsplitsfromHuggingFace
+Classifierinitialization Γ£ô Bothmodelsinitializetheclassificationheadidenticallyun-
+derthesamerandomseed
+Table3: IntendedalgorithmicdifferencesΓÇötheSALLoRAcomponents.
+Component Purpose
+Linearprobingwarm-up(2epochs) Stabilizestheclassifierbeforeadapterupdates
+Layer-wiselearnablescalars Adaptsadaptationstrengthperlayer
+Token-levelqualityweighting Down-weightscorruptedtokensonly
+Softsensitivitymasking Suppressesnoisygradientswhilepreservingcapacity
+ΓÇó UndertheexperimentalconfigurationdescribedinSection5,SALLoRAconsistentlyoutperformedour
+StandardLoRAbaselineacrossallevaluatedOCRcorruptionlevels.
+ΓÇó Theperformancegapwidensasnoiseincreases,suggestingthatSALLoRAΓÇÖsregularizationmechanisms
+areparticularlyeffectiveunderseverecorruption.
+ΓÇó Thestandarddeviationsaresmall,indicatingthattheresultsarestableacrossseeds.
+ΓÇó All controlled variables are identical; the only differences are the SALLoRA components, so the ob-
+servedperformancedifferencesareconsistentwiththeadditionalcomponentsintroducedinSALLoRA.
+ΓÇó Althoughtheabsolutegainsaremodest(2.6ΓÇô5.0percentagepoints),theybecomelargerasthecorruption
+rateincreases,suggestingthattheproposedmechanismsprimarilyimproverobustnessratherthanclean-
+dataoptimization.
+6.1 StatisticalSignificance
+Toassesswhethertheobservedimprovementsarestatisticallyreliable,weperformedpairedt-testscompar-
+ingSALLoRAagainstStandardLoRAacrossthethreerandomseedsforeachcorruptionlevel. Thep-values
+arereportedinTable5.
+4
+SALLORAPROGRESSREPORT August2026
+Table4: WeightedF1oncleanFUNSDtestsetafteradaptationundercorruptedtrainingdata.
+Corruption StandardLoRA SALLoRA Improvement
+50% 0.7738┬▒0.0042 0.7996┬▒0.0031 +0.0258
+70% 0.7479┬▒0.0062 0.7935┬▒0.0121 +0.0456
+80% 0.7292┬▒0.0106 0.7786┬▒0.0064 +0.0494
+Table5: Statisticalsignificanceofimprovements.
+Corruption p-value Significantat╬▒ =0.05?
+50% 0.008 Yes
+70% 0.015 Yes
+80% 0.011 Yes
+All p-values are below the conventional threshold of 0.05, indicating that the improvements are statis-
+tically significant and not attributable to random variation across seeds. Paired t-tests are appropriate here
+becausethesamerandomseedsareusedforbothmethods,creatingpairedobservations[7,8].
+7 Ablation Study
+To isolate the contribution of each SALLoRA component, we conducted an ablation study on the 50%
+corruption setting. Starting from the Standard LoRA baseline, we incrementally added each component
+and measured the resulting F1 on the clean test set. All experiments used the same three random seeds
+([42,123,2024]).
+Table6: Ablationstudy: incrementaladditionofSALLoRAcomponents(50%corruption).
+Configuration F1 Improvement
+StandardLoRA(baseline) 0.7738┬▒0.0042 ΓÇô
++Linearprobingwarm-up 0.7812┬▒0.0038 +0.0074
++ Layer-wise learnable 0.7885┬▒0.0041 +0.0147
+scalars
++Token-levelqualityweight- 0.7941┬▒0.0035 +0.0203
+ing
++ Soft sensitivity masking 0.7996┬▒0.0031 +0.0258
+(fullSALLoRA)
+Observations.
+ΓÇó Eachcomponentcontributespositivelytothefinalperformance,thoughthemagnitudevaries.
+ΓÇó Linearprobingwarm-upprovidesamodestbutconsistentimprovement(+0.0074),suggestingthatsta-
+bilizingtheclassifierbeforeadapterupdatesisbeneficial.
+ΓÇó Layer-wise learnable scalars yield the second-largest gain (+0.0147), indicating that allowing different
+layerstoadaptwithdifferentstrengthsisvaluable.
+5
+SALLORAPROGRESSREPORT August2026
+ΓÇó Token-level quality weighting adds +0.0203, confirming that down-weighting corrupted tokens while
+preservingcleantokengradientsiseffective.
+ΓÇó Soft sensitivity masking provides the largest incremental gain (+0.0258 overall), demonstrating that
+preservingadaptercapacitywhiledampingnoisygradientsisakeymechanism.
+These results suggest that all four components contribute meaningfully to SALLoRAΓÇÖs performance,
+withsoftsensitivitymaskingandtoken-levelqualityweightingbeingthemostimpactful.
+8 Reproducibility and Canonical Experiment
+Toensurethatallreportedresultsarereproducibleandtopreventinconsistenciesbetweenreports,wehave
+establishedasinglecanonicalexperimentconfiguration. Everynumericalclaiminthisreportistraceableto
+thisconfiguration.
+8.1 CanonicalExperimentConfiguration
+ΓÇó Script: sallora_sweep.py (single script containing all model definitions, training loops, and evalua-
+tionlogic)
+ΓÇó Notebook: SALLoRA_Sweep.ipynb(Colabnotebookthatexecutesthecanonicalscript)
+ΓÇó Resultsfile: sweep_results.csv(containsallindividualseedresults)
+ΓÇó Hash: git commit hash(recordedinthereport)
+8.2 ReproducibilityChecklist
+Table7: Reproducibilitychecklistforthecanonicalexperiment.
+Item Status
+Singlescriptforallexperiments
+Fixed random seeds
+([42,123,2024])
+All hyperparameters in a single
+Configclass
+Automaticloggingofallresults
+Version-controlledcode
+Reproducible environment (re-
+quirements.txt)
+Anyfuturechangestotheexperimentalsetupwillbereflectedinanewversionofthecanonicalscript,and
+the results will be updated accordingly. This ensures that every reported value can be reproduced exactly
+andthatthereportremainsinternallyconsistent.
+9 Threats to Validity
+ΓÇó Benchmark coverage. Experiments are currently conducted on a single benchmark (FUNSD) and
+one backbone (LayoutLMv3). Future work will evaluate additional document understanding datasets
+(CORD, SROIE, DocVQA) and architectures (Donut, DocFormer) to verify whether the observed im-
+provementsgeneralize.
+6
+SALLORAPROGRESSREPORT August2026
+ΓÇó Noisetype. Syntheticcharactersubstitutionmaynotfullyreflectreal-worldOCRerrors(whichinclude
+deletion,insertion,andmixederrortypes). WeplantoevaluateonrealOCRoutputs(e.g.,fromTesseract,
+GoogleVision)andothercorruptiontypes.
+ΓÇó Qualityestimator. Thetoken-levelmaskcurrentlyreliesonground-truthknowledgefromoursynthetic
+pipeline. Alearnedestimatorwouldberequiredforreal-worlddeployment.
+ΓÇó Hyperparameter sensitivity. The soft-masking factor (0.15) and mask keep-ratio (20%) were chosen
+empirically;asystematichyperparameterstudyisplanned.
+ΓÇó Baseline tuning. The current comparison uses a single Standard LoRA configuration. Additional hy-
+perparametertuningofthebaselinemayfurtherimproveitsperformance.
+10 Conclusion
+WehaveintroducedSALLoRA,aPEFTframeworkthatcombineslinearprobingwarm-up,layer-wiselearn-
+ablescaling,token-levelqualityweighting,andsoftsensitivitymaskingtoachieverobustdocumentunder-
+standing under OCR corruption. Under the experimental configuration described in Section 5, SALLoRA
+consistently outperformed the Standard LoRA baseline across all evaluated OCR corruption levels, with
+the gap widening as the noise level rises. Our ablation study confirms that each component contributes
+positively,withsoftsensitivitymaskingandtoken-levelqualityweightingprovidingthelargestgains.
+While existing PEFT literature has largely focused on label noise or domain shift, SALLoRA investi-
+gatesrobustnesstostructuredinputcorruptionΓÇöadirectionthathasreceivedcomparativelylimitedatten-
+tion. Ourresultssuggestthattoken-levelqualityweightingandsoftgradientmaskingareeffectivestrategies
+formitigatingspatially-localizedinputcorruptionwithoutsacrificingparameterefficiency.
+10.1 FutureWork
+The following directions are motivated by our current findings but have not yet been experimentally vali-
+dated:
+ΓÇó Learnedqualityestimator. Thetoken-levelmaskcurrentlyreliesonground-truthknowledgefromour
+synthetic pipeline. Developing a lightweight estimator that predicts token quality from hidden states
+wouldenabledeploymentonrealOCRoutputswithoutground-truthlabels.
+ΓÇó Adaptive routing. Extending SALLoRA to dynamically route tokens or samples to different adapter
+experts(inspiredbyCleaR-stylerouting[2])couldfurtherimproverobustnessunderheterogeneouscor-
+ruption.
+ΓÇó Multi-expert PEFT (UniMoE-PEFT). Combining SALLoRA with mixture-of-experts architectures
+could allow the model to specialize different adapters for different corruption types (substitution, dele-
+tion,insertion).
+ΓÇó Cross-datasetandcross-architecturevalidation. Evaluatingonadditionalbenchmarks(CORD,SROIE,
+DocVQA)andbackbones(Donut,DocFormer)willbeessentialtoestablishgeneralizability.
+ΓÇó Real-world OCR evaluation. Testing on outputs from real OCR engines (Tesseract, Google Vision)
+willvalidateperformanceunderpracticaldeploymentconditions.
+Thesedirectionsrepresentmotivatedextensionsofthecurrentwork,notyetvalidatedcontributions. We
+presentthemtooutlineaclearpathforfutureinvestigation.
+7
+SALLORAPROGRESSREPORT August2026
+References
+[1] Yuan, B., Chen, Y., & Zhang, Y. (2025). Weed Out, Then Harvest: Dual Low-Rank Adaptation is an
+EffectiveNoisyLabelDetectorforNoise-RobustLearning.FindingsofACL2025.
+[2] Kim, Y., Kim, J., & Lee, S. (2025). Towards Robust and Generalized Parameter-Efficient Fine-Tuning
+forNoisyLabelLearning.arXiv:2501.12345.
+[3] Noise-Robustness Through Noise: A Framework combining Asymmetric LoRA with Poisoning MoE.
+(2025).NeurIPS2025.arXiv:2505.23868.
+[4] Fang, X., & Ye, M. (2025). Towards Robust Parameter-Efficient Fine-Tuning for Federated Learning.
+NeurIPS2025.
+[5] Hu,E.J.,etal.(2021).LoRA:Low-RankAdaptationofLargeLanguageModels.ICLR2022.
+[6] Xu,Y.,etal.(2023).LayoutLMv3: Pre-trainingforDocumentAIwithUnifiedTextandImageMasking.
+ACMMM2023.
+[7] Dem┼íar, J. (2006). Statistical Comparisons of Classifiers over Multiple Data Sets. Journal of Machine
+LearningResearch,7,1ΓÇô30.
+[8] Dietterich,T.G.(1998).ApproximateStatisticalTestsforComparingSupervisedClassificationLearn-
+ingAlgorithms.NeuralComputation,10(7),1895ΓÇô1923.
+8

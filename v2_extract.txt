@@ -1,0 +1,184 @@
+﻿======================================================================
+DOCUMENT: SALLoRA v2 Report
+======================================================================
+SALLORAPROGRESSREPORT August2026
+SALLoRA: Sensitivity-Aware Layer-wise LoRA for
+Robust Parameter-Efficient Fine-Tuning under
+Structured OCR Corruption
+TowardsRobustParameter-EfficientFine-TuningunderStructuredOCRCorruption
+MD.RafiImam1
+1DepartmentofElectricalandComputerEngineering,RUET
+ProgressReportΓÇöAugust2026
+Abstract
+Westudywhetherparameter-efficientfine-tuning(PEFT)canbemaderobusttostructuredinputcorrup-
+tionΓÇöspecificallyOCR-inducednoiseΓÇöindocumentunderstandingtasks. WeintroduceSALLoRA
+(Sensitivity-AwareLayer-wiseLoRA),whichcombinesalinear-probingwarm-up,layer-wiselearnable
+adaptationscaling, token-levelqualityweighting, andsoftsensitivitymasking. Allexperimentsinthis
+report were rerun from scratch under a unified training pipeline to ensure a fair, controlled compari-
+son against Standard LoRA. Under the experimental configuration described in Section 5, SALLoRA
+consistently outperforms our Standard LoRA baseline across three OCR corruption levels (50%, 70%,
+80%) on the FUNSD benchmark, with the performance gap widening as corruption increases. We re-
+portafullfairnesschecklist, statisticalsignificancetests, anablationstudyisolatingeachcomponentΓÇÖs
+contribution,threatstovalidity,andhonestlimitationsratherthanoverstatedclaims.
+1 Introduction
+All experiments in this report were rerun from scratch under a unified training pipeline to ensure
+a fair comparison between Standard LoRA and SALLoRA. This report summarizes our progress on
+developingaparameter-efficientfine-tuning(PEFT)methodthatisrobusttostructuredinputcorruptionΓÇö
+specificallyOCR-inducederrorsΓÇöfordocumentunderstanding. WecompareSALLoRAagainstthewidely
+used Standard LoRA, keeping all experimental conditions identical except for the components that define
+theproposedmethod.
+2 Problem Statement
+Parameter-efficient fine-tuning methods, particularly Low-Rank Adaptation (LoRA) [5], have become the
+standard approach for adapting large pre-trained models to downstream tasks with minimal memory and
+compute overhead. However, real-world document understanding frequently encounters structured input
+corruptionΓÇöOCRerrors,missingwords,andlayoutdistortionsΓÇöthatcandegradePEFTperformance.
+Standard LoRA applies the same low-rank adaptation uniformly across all layers and samples. While
+thisworkswellforcleaninputs,itcanoverfittonoisepatternswhentheinputitselfiscorrupted,leadingto
+poorgeneralizationoncleantestdata.
+ResearchQuestion. CanwemakeLoRArobusttoinputcorruptionwithoutsacrificingparameter
+efficiencyorclean-dataperformance?
+1
+SALLORAPROGRESSREPORT August2026
+3 Related Work
+Recent approaches to noise-robust PEFT have focused primarily on label noise (incorrect training labels)
+ratherthaninputnoise. Table1summarizesrepresentativework.
+Table1: Representativenoise-robustPEFTmethodsandtheirfocus.
+Method Year Venue NoiseType Mechanism
+DeLoRA 2025 ACLFindings Labelnoise DualLoRA(clean/noisy)forsam-
+pleselection
+CleaR[2] 2025 arXiv:2501.12345Labelnoise Routing-based PEFT module acti-
+vation
+LoPE[3] 2025 NeurIPS Labelnoise AsymmetricLoRAwithpoisoning
+expert
+RFedLR[4] 2025 NeurIPS Labelnoise Sensitivity-awareparameterselec-
+tion
+SALLoRA ΓÇô ΓÇô Input noise Token-level weighting + layer-
+(ours) (OCR) wisescaling+softmasking
+Key distinction. Existing PEFT literature has largely focused on robustness to label noise (e.g., De-
+LoRA [1], CleaR [2], LoPE [3]), domain shift, or federated learning settings [4]. Comparatively fewer
+studies investigate parameter-efficient adaptation under structured OCR input corruption in document un-
+derstanding. Input corruption is spatially localized ΓÇö only a subset of tokens is affected ΓÇö and requires
+different mitigation strategies than label-noise-robust methods. SALLoRA addresses this gap by operating
+at the token level, scaling adaptation per layer, and applying soft sensitivity masking to preserve model
+capacitywhiledampeningnoise.
+4 SALLoRA: Proposed Method
+SALLoRAintroducesfourcomplementarymechanismsdesignedtomakeLoRArobusttoinputnoise.
+4.1 LinearProbingWarm-up
+ΓÇó FreezetheLoRAadapters;trainonlytheclassifierheadfor2epochs.
+ΓÇó Preventsuncalibratedgradientsfromdistortingthebackbonebeforeadaptationbegins.
+4.2 Layer-wiseLearnableScaling
+Each transformer layer l is assigned a learnable scalar s , passed through a sigmoid to produce a gate r =
+l l
+╧â(s ). Thehidden-stateupdatebecomes
+l
+H =H +r ┬╖ΓêåW(H ). (1)
+l lΓêÆ1 l l lΓêÆ1
+This allows different transformer layers to adapt with different strengths, which may help shallow layers
+focusonlocalfeatureswhiledeeperlayerspreservehigher-levelsemantics.
+4.3 Token-LevelQualityWeighting
+OCRcorruptionisspatiallylocalized;onlyafractionoftokensarecorrupted. Weassigneachtokenaquality
+weightq :
+i,t
+2
+SALLORAPROGRESSREPORT August2026
+ΓÇó 1.0forcleantokens,
+ΓÇó 0.1forcorruptedtokens,
+ΓÇó 0.0forpadding.
+Thetraininglossbecomes
+L = 1 Γêæ B Γêæ t Γäô i,t ┬╖Γè«[y i,t ╠╕=ΓêÆ100]┬╖q i,t . (2)
+B i=1 Γêæ t Γè«[y i,t ╠╕=ΓêÆ100]┬╖q i,t
+ThispreservesthefullspatialΓÇôvisualcontextwhilefocusinglearningontrustworthyregions.
+4.4 SoftSensitivityMasking
+Insteadofhard-freezingΓÇ£less-sensitiveΓÇ¥parameters,wescaletheirgradientsbyafactor╬│ =0.15:
+Γêç╬╕ ΓåÉΓêç╬╕ΓèÖM+Γêç╬╕ΓèÖ(1ΓêÆM)┬╖╬│. (3)
+M is a binary mask computed once before adaptation using a clean reference subset (the top 20% of pa-
+rameters per layer by gradient magnitude). This damps noise propagation while preserving full adapter
+capacity.
+5 Experimental Setup
+WeevaluateonFUNSD(FormUnderstandinginNoisyScannedDocuments)[6],astandardbenchmarkfor
+documentunderstanding. Weinjectsyntheticcharacter-substitutionnoiseatratesof50%,70%,and80%to
+simulateOCRerrors.
+5.1 FairnessChecklist
+Table 2 lists every controlled experimental condition. The only differences between Standard LoRA and
+SALLoRAarethefourproposedcomponentsdescribedinSection4(summarizedagaininTable3).
+5.2 LearningRateSelection
+StandardLoRAusesasinglelearningrate(2├ù10ΓêÆ4)foralltrainableparameters. SALLoRAusesdifferent
+learningratesfordifferentparametergroups,sincetheyexhibitdifferentoptimizationdynamics:
+ΓÇó LoRAadapters(1├ù10ΓêÆ3): thelow-rankmatricesbenefitfromahi
+
+======================================================================
+DOCUMENT: CV Updated
+======================================================================
+MD. Rafi Imam
+Dhaka, Bangladesh
+rafiimam96@gmail.com | LinkedIn | GitHub | Website
+GRE: 304 (Q: 164) | IELTS Academic: 7.0
+RESEARCH INTERESTS
+Machine Learning ΓÇó Natural Language Processing ΓÇó Computer Vision ΓÇó Multimodal Systems ΓÇó AI
+Systems Engineering ΓÇó Applied AI in Real-World Systems
+EDUCATION
+Rajshahi University of Engineering & Technology (RUET) 2018 ΓÇô 2023
+B.Sc. in Electrical & Computer Engineering CGPA: 3.30/4.00
+Last 60 credit hours GPA: 3.55/4.00
+Relevant Coursework: Machine Learning, Neural Network, Natural Language Processing, Image
+Processing, Data Structures, Algorithms, Digital Signal Processing, Computer Networks
+Standardized Tests: GRE 304 (Quantitative: 164, Verbal: 140, AWA: 3.0) | IELTS Academic
+Overall 7.0 (Listening: 7.0, Reading: 7.0, Writing: 6.5, Speaking: 6.5)
+PUBLICATIONS
+1. R. Imam, et al., Suicidal Thought Detection Using NLP on Reddit Data, IEEE ICCIT 2023.
+2. Md. M. Hossain, et al., R. Imam, Privacy-Preserving Federated Learning for Lung Cancer Classi-
+fication, IEEE ICCIT 2023.
+3. T. H. Mou, et al., R. Imam, Detecting Polycystic Ovary Syndrome Using Machine Learning, IEEE
+ICCIT 2023.
+4. Z.Afrin, etal., R. Imam, YOLOv8-based Object Detection for Self-driving Cars, IEEEICCIT2023.
+INDEPENDENT RESEARCH PROJECTS
+SALLoRA: Sensitivity-Aware Layer-wise Low-Rank Adaptation under Structured Input
+Corruption August 2026
+ΓÇó Designed a robust PEFT framework on LayoutLMv3 combining token-level quality weighting and
+soft sensitivity masking to mitigate localized spatiotemporal OCR noise.
+ΓÇó Reran and statistically validated performance under identical training pipelines, demonstrating a
+stable +4.94% F1 relative gain over Standard LoRA as OCR corruption scaled to 80% (p = 0.0094).
+ΓÇó Developing the theoretical transition to UniMoE-PEFT using token-level uncertainty routing and
+noise-gated Mixture-of-Experts.
+RESEARCH & PROFESSIONAL EXPERIENCE
+Software Development Officer (AI & Automation) Dec 2023 ΓÇô Present
+Jamuna Bank PLC, AI & Automation Division
+ΓÇó ML Infrastructure: Designed and deployed a real-time Face Liveness & Presentation Attack De-
+tection System, decoupling heavy PyTorch CUDA inferences (FastAPI) from stateless asynchronous
+gateway orchestrators (asyncio.gather), reducing evaluation latency from >5.0s to ╦£800ms.
+ΓÇó SALLoRA Online Updates: Integrated client-side SALLoRA background workers to execute 2-
+epoch online micro-batch updates via a security API, enabling hot-reloading of calibrated model
+weights with zero system downtime.
+ΓÇó Distributed Pipelines: Architected event-driven, high-concurrency data streaming pipelines using
+Apache Kafka and Docker to ingest and process transaction-triggered risk flags.
+ΓÇó Applied Swin-B forward hooks for intermediate feature extraction within the AI-integrated finan-
+cial systems, supporting OCR pipelines, face matching, and structured data extraction for real-world
+decision workflows.
+ΓÇó Developed data processing and validation pipelines involving AML checks, deduplication, and
+transaction profiling for risk-aware systems.
+ΓÇó Applied real-time system design using WebSocket and push notification services.
+SELECTED SYSTEMS & PROJECTS
+eKYC Platform (Digital Account Opening System)
+.NET Core, React, Tailwind, Python, FastAPI
+ΓÇó Designed full-stack system for digital onboarding with multi-stage approval workflows.
+ΓÇó Integrated AI-based verification pipeline:
+ΓÇô NID OCR and face matching (Polygon API)
+ΓÇô Document OCR, address extraction, and profession prediction (Google APIs)
+ΓÇó Implemented AML checks, deduplication, and transaction behavior capture.
+ΓÇó Built real-time communication system using WebSocket and Firebase.
+Bancassurance Platform
+Node.js, Kafka, MongoDB, Netflix Conductor
+ΓÇó Designed distributed workflow system integrating multiple insurance providers.
+ΓÇó Implemented event-driven architecture for asynchronous processing.
+ΓÇó Developed fault-tolerant callback and retry mechanisms.
+TECHNICAL SKILLS
+Programming: Python, JavaScript, TypeScript, C/C++
+ML/AI: PyTorch, TensorFlow, NLP, Computer Vision, OCR systems
+Systems: Linux, Distributed Systems, Kafka, REST APIs
+Backend: Node.js, FastAPI, ASP.NET Core
+Databases: MongoDB, PostgreSQL
+Tools: Docker, Kubernetes, Git
+HONORS & AWARDS
+ΓÇó RUET Merit Scholarship (Top 30 students) ΓÇô 2020, 2021, 2022
+ΓÇó Leadership Award: Class Representative ΓÇô 2020ΓÇô2023
+

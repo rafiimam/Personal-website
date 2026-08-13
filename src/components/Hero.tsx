@@ -90,8 +90,8 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
           <a href="#artifacts" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-gold-300 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-gold-400/30 transition">
             Research Interest Summary
           </a>
-          <a href="#artifacts" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-teal-300 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-teal-400/30 transition">
-            DocXAR-CUFIT Report
+          <a href="#sallora" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-teal-300 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-teal-400/30 transition">
+            SALLoRA v2 Report
           </a>
           <a href="#enterprise-ai" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-slate-200 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-slate-500/40 transition">
             Enterprise AI Profile
