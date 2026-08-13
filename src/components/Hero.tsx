@@ -51,12 +51,12 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
             href="#sallora"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold-400 hover:bg-gold-300 text-base-900 font-semibold text-sm rounded-lg transition-all shadow-lg shadow-gold-400/10 hover:shadow-gold-400/20"
           >
-            DocXAR-CUFIT Research
+            SALLoRA Research
             <ArrowRight className="w-4 h-4" />
           </a>
 
           <button
-            onClick={() => onViewPdf("Curriculum Vitae", assetUrl("./docs/MD_RAFI_IMAM_CV.pdf"))}
+            onClick={() => onViewPdf("Curriculum Vitae", assetUrl("./docs/MD_Rafi_Imam_CV.pdf"))}
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-base-800 hover:bg-base-750 text-slate-200 font-medium text-sm rounded-lg border border-base-700 transition-all"
           >
             <FileText className="w-4 h-4 text-gold-400" />
