@@ -1,121 +1,94 @@
 import React from 'react';
-import { ArrowRight, FileText, ExternalLink } from 'lucide-react';
+import { ArrowRight, FileText, Github, Linkedin, GraduationCap, Mail, MapPin } from 'lucide-react';
 import { PERSONAL_INFO, METRICS } from '../data/content';
 import { assetUrl } from '../utils/assetUrl';
 
 interface HeroProps {
-  onViewPdf: (title: string, url: string) => void;
+  onViewPdf: (title: string, pdfUrl: string) => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
   return (
-    <section id="top" className="relative pt-28 sm:pt-36 pb-20">
-      {/* Subtle warm glow — not flashy, just ambient depth */}
-      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-gold-400/[0.04] rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute top-20 right-1/4 w-[400px] h-[400px] bg-teal-400/[0.03] rounded-full blur-[140px] pointer-events-none" />
+    <section id="top" className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-20">
+      {/* Subtle paper texture: soft radial light + faint grid */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(37,99,184,0.08),transparent)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(20,33,61,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(20,33,61,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black,transparent)]" />
+      </div>
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10">
-        {/* Identity label — research-first framing */}
-        <p className="text-xs font-mono tracking-widest uppercase text-gold-400/80 mb-6">
-          AI Research Engineer · Multimodal Foundation Models · Prospective Ph.D. 2027
-        </p>
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="max-w-3xl">
+          <p className="eyebrow mb-5 flex items-center gap-2">
+            <span className="inline-block h-px w-8 bg-brass-500" aria-hidden="true" />
+            {PERSONAL_INFO.targetRole}
+          </p>
 
-        {/* Name & identity */}
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-white leading-[1.15] tracking-tight mb-4">
-          MD. Rafi Imam
-        </h1>
+          <h1 className="font-serif text-5xl sm:text-6xl font-bold tracking-tight text-ink-900 leading-[1.05]">
+            {PERSONAL_INFO.name}
+          </h1>
 
-        <p className="text-lg sm:text-xl text-slate-300/90 font-light max-w-2xl leading-relaxed mb-3">
-          <span className="text-gold-300 font-medium">Researcher in Multimodal AI & Autonomous Systems</span>
-        </p>
+          <p className="mt-4 font-serif text-xl sm:text-2xl text-ink-700 leading-snug">
+            Robust &amp; efficient machine learning —<br className="hidden sm:block" />
+            from controlled PEFT research to production banking AI.
+          </p>
 
-        <p className="text-[15px] text-slate-400 max-w-2xl leading-relaxed mb-8">
-          Investigating how artificial intelligence perceives, adapts, and reasons over time. My work focuses on multimodal foundation models, vision-language reasoning, and developing parameter-efficient frameworks to empower self-evolving AI agents.
-        </p>
+          <p className="mt-3 text-sm font-medium text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>{PERSONAL_INFO.title}</span>
+            <span className="inline-flex items-center gap-1 text-slate-400">
+              <MapPin className="w-3.5 h-3.5" /> {PERSONAL_INFO.location}
+            </span>
+          </p>
 
-        {/* Compact affiliation & context — what professors scan first */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 text-sm text-slate-400 mb-10">
-          <span>
-            <span className="text-slate-500 font-mono text-xs">Current:</span>{' '}
-            <span className="text-slate-300">Software Dev. Officer, AI & Automation — Jamuna Bank PLC</span>
-          </span>
-          <span>
-            <span className="text-slate-500 font-mono text-xs">Degree:</span>{' '}
-            <span className="text-slate-300">B.Sc. ECE, RUET (First Class | 3.55 Last-60 GPA)</span>
-          </span>
+          <p className="mt-6 text-[15px] leading-relaxed text-slate-600">
+            {PERSONAL_INFO.bio}
+          </p>
+
+          {/* Actions */}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <a href="#research" className="btn-primary">
+              View flagship research <ArrowRight className="w-4 h-4" />
+            </a>
+            <button
+              onClick={() => onViewPdf('Curriculum Vitae — MD. Rafi Imam', assetUrl('./docs/MD_RAFI_IMAM_CV.pdf'))}
+              className="btn-secondary"
+            >
+              <FileText className="w-4 h-4" /> Read CV
+            </button>
+            <div className="flex items-center gap-1.5 ml-1">
+              <a href={PERSONAL_INFO.githubUrl} target="_blank" rel="noopener noreferrer" aria-label="GitHub"
+                 className="p-2.5 rounded-lg border border-ink-100 bg-white text-slate-500 hover:text-ink-900 hover:border-ink-200 transition">
+                <Github className="w-[18px] h-[18px]" />
+              </a>
+              <a href={PERSONAL_INFO.linkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+                 className="p-2.5 rounded-lg border border-ink-100 bg-white text-slate-500 hover:text-ink-900 hover:border-ink-200 transition">
+                <Linkedin className="w-[18px] h-[18px]" />
+              </a>
+              <a href={PERSONAL_INFO.scholarUrl} target="_blank" rel="noopener noreferrer" aria-label="Google Scholar"
+                 className="p-2.5 rounded-lg border border-ink-100 bg-white text-slate-500 hover:text-ink-900 hover:border-ink-200 transition">
+                <GraduationCap className="w-[18px] h-[18px]" />
+              </a>
+              <a href={`mailto:${PERSONAL_INFO.email}`} aria-label="Email"
+                 className="p-2.5 rounded-lg border border-ink-100 bg-white text-slate-500 hover:text-ink-900 hover:border-ink-200 transition">
+                <Mail className="w-[18px] h-[18px]" />
+              </a>
+            </div>
+          </div>
+
+          {/* Research interests */}
+          <div className="mt-8 flex flex-wrap gap-2">
+            {PERSONAL_INFO.researchInterests.map((interest) => (
+              <span key={interest} className="badge badge-subtle">{interest}</span>
+            ))}
+          </div>
         </div>
 
-        {/* Primary CTAs — what a professor would click */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          <a
-            href="#sallora"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold-400 hover:bg-gold-300 text-base-900 font-semibold text-sm rounded-lg transition-all shadow-lg shadow-gold-400/10 hover:shadow-gold-400/20"
-          >
-            SALLoRA Research
-            <ArrowRight className="w-4 h-4" />
-          </a>
-
-          <button
-            onClick={() => onViewPdf("Curriculum Vitae", assetUrl("./docs/MD_Rafi_Imam_CV.pdf"))}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-base-800 hover:bg-base-750 text-slate-200 font-medium text-sm rounded-lg border border-base-700 transition-all"
-          >
-            <FileText className="w-4 h-4 text-gold-400" />
-            View CV
-          </button>
-
-          <a
-            href={PERSONAL_INFO.scholarUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-slate-400 hover:text-white text-sm rounded-lg hover:bg-base-800 transition-all"
-          >
-            Google Scholar
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-
-          <a
-            href={PERSONAL_INFO.researchGateUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-slate-400 hover:text-white text-sm rounded-lg hover:bg-base-800 transition-all"
-          >
-            ResearchGate
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
-
-        {/* Quick-access artifacts for professors scanning the page */}
-        <div className="flex flex-wrap gap-2 mb-12">
-          <span className="text-[11px] font-mono text-slate-600 self-center mr-1">Quick access:</span>
-          <a href="#artifacts" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-gold-300 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-gold-400/30 transition">
-            Research Interest Summary
-          </a>
-          <a href="#sallora" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-teal-300 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-teal-400/30 transition">
-            SALLoRA v2 Report
-          </a>
-          <a href="#enterprise-ai" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-slate-200 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-slate-500/40 transition">
-            Enterprise AI Profile
-          </a>
-          <a href="#publications" className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-slate-400 hover:text-slate-200 bg-base-850 hover:bg-base-800 rounded border border-base-700/50 hover:border-slate-500/40 transition">
-            4 IEEE Publications
-          </a>
-        </div>
-
-        {/* At-a-glance metrics — the numbers professors want to see instantly */}
-        <div className="section-divider mb-10" />
-
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 sm:gap-6">
-          {METRICS.map((m, i) => (
-            <div key={i} className="group">
-              <div className="text-2xl sm:text-3xl font-serif font-bold text-white group-hover:text-gold-300 transition-colors">
-                {m.value}
-              </div>
-              <div className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">
-                {m.label}
-              </div>
-              <div className="text-[11px] text-slate-500 mt-0.5">
-                {m.description}
-              </div>
+        {/* Metrics strip */}
+        <div className="mt-14 grid grid-cols-2 md:grid-cols-5 gap-3">
+          {METRICS.map((m) => (
+            <div key={m.label} className="card card-hover px-5 py-4">
+              <div className="font-serif text-2xl font-bold text-ink-900">{m.value}</div>
+              <div className="mt-0.5 text-[13px] font-semibold text-slate-700">{m.label}</div>
+              <div className="text-xs text-slate-400">{m.description}</div>
             </div>
           ))}
         </div>

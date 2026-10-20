@@ -1,184 +1,119 @@
 import React from 'react';
-import { FileText } from 'lucide-react';
+import { FileText, GraduationCap, Award } from 'lucide-react';
 import { ACADEMIC_CREDENTIALS } from '../data/content';
 
 interface AcademicCredentialsProps {
-  onViewPdf: (title: string, url: string) => void;
+  onViewPdf: (title: string, pdfUrl: string) => void;
 }
 
 export const AcademicCredentials: React.FC<AcademicCredentialsProps> = ({ onViewPdf }) => {
-  const { gre, ielts } = ACADEMIC_CREDENTIALS;
+  const c = ACADEMIC_CREDENTIALS;
 
   return (
-    <section id="credentials" className="py-20 relative">
+    <section id="credentials" className="py-20 sm:py-24">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         <div className="section-divider mb-16" />
-
-        <p className="text-xs font-mono tracking-widest uppercase text-gold-400/80 mb-4">
-          Standardized Tests & Academic Record
-        </p>
-
-        <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white leading-snug mb-3">
-          Academic Credentials
+        <p className="eyebrow">Academic Credentials</p>
+        <h2 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-ink-900">
+          Education &amp; standardized tests
         </h2>
 
-        <p className="text-sm text-slate-400 max-w-2xl mb-10">
-          Verified test scores, degree classification, and academic record for graduate admissions evaluation.
-        </p>
-
-        {/* Test scores — side by side, clean academic presentation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          
-          {/* GRE */}
-          <div className="card p-6">
-            <div className="flex items-start justify-between mb-5">
+        <div className="mt-10 grid lg:grid-cols-5 gap-4">
+          {/* Degree */}
+          <div className="card card-hover p-6 sm:p-7 lg:col-span-3">
+            <div className="flex items-start gap-3.5">
+              <span className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-accent-50 text-accent-700">
+                <GraduationCap className="w-5 h-5" />
+              </span>
               <div>
-                <p className="text-[11px] font-mono text-gold-400/80 uppercase tracking-wider mb-1">
-                  ETS GRE General Test
+                <h3 className="font-serif text-xl font-bold text-ink-900 leading-snug">{c.degree}</h3>
+                <p className="mt-0.5 text-sm font-medium text-slate-600">{c.institution}</p>
+                <p className="text-[13px] text-slate-400">{c.period} · {c.division}</p>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-xl bg-paper-100 border border-ink-100 px-4 py-3">
+                <div className="font-mono text-[11px] uppercase tracking-wider text-slate-400">CGPA</div>
+                <div className="font-serif text-xl font-bold text-ink-900">{c.cgpa}</div>
+              </div>
+              <div className="rounded-xl bg-paper-100 border border-ink-100 px-4 py-3">
+                <div className="font-mono text-[11px] uppercase tracking-wider text-slate-400">Last 60 credit hours</div>
+                <div className="font-serif text-xl font-bold text-ink-900">{c.last60Gpa}</div>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-2">
+              {c.awards.map((a) => (
+                <p key={a} className="flex items-center gap-2 text-sm text-slate-600">
+                  <Award className="w-4 h-4 text-brass-600 shrink-0" /> {a}
                 </p>
-                <p className="text-xs text-slate-500 font-mono">Tested: {gre.testDate}</p>
-              </div>
-              <button
-                onClick={() => onViewPdf("GRE Score Report", gre.pdfUrl)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-gold-300 bg-gold-400/10 hover:bg-gold-400/20 border border-gold-400/20 rounded-md transition"
-              >
-                <FileText className="w-3 h-3" />
-                Report
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {/* Quant — the highlight */}
-              <div className="bg-base-850 p-4 rounded-lg border border-base-700/30">
-                <div className="flex items-baseline justify-between mb-2">
-                  <span className="text-sm font-medium text-white">Quantitative Reasoning</span>
-                  <span className="font-serif text-2xl font-bold text-gold-300">{gre.quantScore}<span className="text-sm text-slate-500">/170</span></span>
-                </div>
-                <div className="w-full h-1.5 bg-base-700 rounded-full overflow-hidden mb-1.5">
-                  <div className="h-full bg-gradient-to-r from-gold-500 to-gold-300 rounded-full" style={{ width: `${(gre.quantScore - 130) * 2.5}%` }} />
-                </div>
-                <p className="text-[11px] font-mono text-teal-300">{gre.quantPercentile}</p>
-              </div>
-
-              {/* Verbal & AWA */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-base-850 p-3 rounded-lg border border-base-700/30">
-                  <p className="text-[11px] text-slate-500 mb-0.5">Verbal Reasoning</p>
-                  <p className="font-serif text-lg font-bold text-white">{gre.verbalScore}<span className="text-xs text-slate-500">/170</span></p>
-                  <p className="text-[10px] text-slate-500 font-mono">{gre.verbalPercentile}</p>
-                </div>
-                <div className="bg-base-850 p-3 rounded-lg border border-base-700/30">
-                  <p className="text-[11px] text-slate-500 mb-0.5">Analytical Writing</p>
-                  <p className="font-serif text-lg font-bold text-white">{gre.awaScore}<span className="text-xs text-slate-500">/6.0</span></p>
-                  <p className="text-[10px] text-slate-500 font-mono">{gre.awaPercentile}</p>
-                </div>
-              </div>
-
-              {/* Total */}
-              <div className="flex items-center justify-between pt-2 border-t border-base-700/30 text-sm">
-                <span className="text-slate-500">Combined Score</span>
-                <span className="font-serif font-bold text-white text-lg">{gre.totalScore}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* IELTS */}
-          <div className="card p-6">
-            <div className="flex items-start justify-between mb-5">
-              <div>
-                <p className="text-[11px] font-mono text-teal-400/80 uppercase tracking-wider mb-1">
-                  IELTS Academic
-                </p>
-                <p className="text-xs text-slate-500 font-mono">Tested: {ielts.testDate} • CEFR {ielts.cefrLevel}</p>
-              </div>
-              <button
-                onClick={() => onViewPdf("IELTS Score Report", ielts.pdfUrl)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-teal-300 bg-teal-400/10 hover:bg-teal-400/20 border border-teal-400/20 rounded-md transition"
-              >
-                <FileText className="w-3 h-3" />
-                Report
-              </button>
-            </div>
-
-            {/* Overall band */}
-            <div className="bg-base-850 p-4 rounded-lg border border-base-700/30 mb-4">
-              <div className="flex items-baseline justify-between">
-                <span className="text-sm font-medium text-white">Overall Band Score</span>
-                <span className="font-serif text-2xl font-bold text-teal-300">{ielts.overallBand}</span>
-              </div>
-              <p className="text-[11px] text-slate-500 mt-1">CEFR Level {ielts.cefrLevel} — Proficient User</p>
-            </div>
-
-            {/* Band breakdown */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: "Listening", score: ielts.listening },
-                { label: "Reading", score: ielts.reading },
-                { label: "Writing", score: ielts.writing },
-                { label: "Speaking", score: ielts.speaking },
-              ].map((band, i) => (
-                <div key={i} className="bg-base-850 p-3 rounded-lg border border-base-700/30">
-                  <p className="text-[11px] text-slate-500 mb-0.5">{band.label}</p>
-                  <p className="font-serif text-lg font-bold text-white">{band.score}</p>
-                </div>
               ))}
             </div>
-          </div>
-        </div>
 
-        {/* Degree & transcript */}
-        <div className="card p-6 sm:p-8">
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
-            <div>
-              <p className="text-[11px] font-mono text-gold-400/80 uppercase tracking-wider mb-1">
-                Undergraduate Degree
-              </p>
-              <h3 className="font-serif text-xl font-bold text-white">{ACADEMIC_CREDENTIALS.degree}</h3>
-              <p className="text-sm text-slate-400 mt-1">{ACADEMIC_CREDENTIALS.institution} • {ACADEMIC_CREDENTIALS.period}</p>
+            <div className="mt-5">
+              <p className="eyebrow mb-2.5">Relevant coursework</p>
+              <div className="flex flex-wrap gap-1.5">
+                {c.coursework.map((course) => (
+                  <span key={course} className="badge badge-subtle">{course}</span>
+                ))}
+              </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-[10px] font-mono text-slate-500 uppercase">Last 60 GPA</p>
-                <p className="font-serif text-xl font-bold text-gold-300">{ACADEMIC_CREDENTIALS.last60Gpa}</p>
+            <button
+              onClick={() => onViewPdf('RUET Academic Transcript', c.transcriptPdfUrl)}
+              className="btn-secondary mt-6"
+            >
+              <FileText className="w-4 h-4" /> View transcript
+            </button>
+          </div>
+
+          {/* Test scores */}
+          <div className="lg:col-span-2 grid gap-4">
+            <div className="card card-hover p-6">
+              <div className="flex items-baseline justify-between">
+                <h3 className="font-serif text-lg font-bold text-ink-900">GRE General Test</h3>
+                <span className="font-mono text-xs text-slate-400">{c.gre.testDate}</span>
               </div>
-              <div className="text-right">
-                <p className="text-[10px] font-mono text-slate-500 uppercase">Overall CGPA</p>
-                <p className="font-serif text-xl font-bold text-white">{ACADEMIC_CREDENTIALS.cgpa}</p>
+              <div className="mt-3 flex items-end gap-2">
+                <span className="font-serif text-4xl font-bold text-ink-900">{c.gre.totalScore}</span>
+                <span className="text-sm text-slate-400 pb-1">total</span>
               </div>
-              <button
-                onClick={() => onViewPdf("Academic Transcript", ACADEMIC_CREDENTIALS.transcriptPdfUrl)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gold-300 bg-gold-400/10 hover:bg-gold-400/20 border border-gold-400/25 rounded-lg transition"
-              >
-                <FileText className="w-3.5 h-3.5" />
-                Transcript
+              <div className="mt-4 space-y-1.5 text-sm">
+                <p className="flex justify-between"><span className="text-slate-500">Quantitative</span><span className="font-semibold text-ink-900">{c.gre.quantScore} · {c.gre.quantPercentile}</span></p>
+                <p className="flex justify-between"><span className="text-slate-500">Verbal</span><span className="font-semibold text-ink-900">{c.gre.verbalScore} · {c.gre.verbalPercentile}</span></p>
+                <p className="flex justify-between"><span className="text-slate-500">Analytical Writing</span><span className="font-semibold text-ink-900">{c.gre.awaScore} · {c.gre.awaPercentile}</span></p>
+              </div>
+              <button onClick={() => onViewPdf('Official GRE Score Report', c.gre.pdfUrl)} className="mt-4 text-[13px] font-semibold text-accent-700 hover:text-accent-600 inline-flex items-center gap-1.5">
+                <FileText className="w-4 h-4" /> Official report
               </button>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Awards */}
-            <div className="bg-base-850 p-4 rounded-lg border border-base-700/30">
-              <p className="text-[10px] font-mono text-gold-400/70 uppercase tracking-wider mb-2">Honors & Awards</p>
-              <div className="space-y-1.5">
-                {ACADEMIC_CREDENTIALS.awards.map((a, i) => (
-                  <p key={i} className="text-xs text-slate-300 flex gap-2">
-                    <span className="text-gold-400/50">›</span> {a}
-                  </p>
+            <div className="card card-hover p-6">
+              <div className="flex items-baseline justify-between">
+                <h3 className="font-serif text-lg font-bold text-ink-900">IELTS Academic</h3>
+                <span className="font-mono text-xs text-slate-400">{c.ielts.testDate}</span>
+              </div>
+              <div className="mt-3 flex items-end gap-2">
+                <span className="font-serif text-4xl font-bold text-ink-900">{c.ielts.overallBand}</span>
+                <span className="text-sm text-slate-400 pb-1">overall · CEFR {c.ielts.cefrLevel}</span>
+              </div>
+              <div className="mt-4 grid grid-cols-4 gap-2 text-center">
+                {([
+                  ['Listening', c.ielts.listening],
+                  ['Reading', c.ielts.reading],
+                  ['Writing', c.ielts.writing],
+                  ['Speaking', c.ielts.speaking],
+                ] as const).map(([label, score]) => (
+                  <div key={label} className="rounded-lg bg-paper-100 border border-ink-100 py-2">
+                    <div className="font-serif text-base font-bold text-ink-900">{score.toFixed(1)}</div>
+                    <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">{label}</div>
+                  </div>
                 ))}
               </div>
-            </div>
-
-            {/* Relevant coursework */}
-            <div className="bg-base-850 p-4 rounded-lg border border-base-700/30">
-              <p className="text-[10px] font-mono text-teal-400/70 uppercase tracking-wider mb-2">
-                Relevant Coursework
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {ACADEMIC_CREDENTIALS.coursework.map((c, i) => (
-                  <span key={i} className="badge badge-subtle text-[10px]">{c}</span>
-                ))}
-              </div>
+              <button onClick={() => onViewPdf('Official IELTS Score Report', c.ielts.pdfUrl)} className="mt-4 text-[13px] font-semibold text-accent-700 hover:text-accent-600 inline-flex items-center gap-1.5">
+                <FileText className="w-4 h-4" /> Official report
+              </button>
             </div>
           </div>
         </div>

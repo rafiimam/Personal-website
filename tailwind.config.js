@@ -4,46 +4,54 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Warm prestigious dark palette
-        base: {
-          950: '#080c16',
-          900: '#0a0f1a',
-          850: '#0e1525',
-          800: '#131b2e',
-          750: '#182238',
-          700: '#1e2a42',
-          600: '#27364f',
-          500: '#344563',
+        // Warm paper background — light, academic, print-like
+        paper: {
+          50:  '#fdfcf9',
+          100: '#faf8f3',
+          200: '#f3f0e7',
+          300: '#e9e4d6',
         },
-        // Warm gold accent — academic prestige
-        gold: {
-          50:  '#fef9ec',
-          100: '#fdf0cc',
-          200: '#fbe299',
-          300: '#f8cf5c',
-          400: '#f5be3a',
-          500: '#eba417',
-          600: '#cf7e11',
-          700: '#ac5b12',
-          800: '#8c4715',
-          900: '#733b15',
+        // Deep ink navy — text and headings
+        ink: {
+          950: '#0d1526',
+          900: '#14213d',
+          800: '#1c2f52',
+          700: '#273e66',
+          600: '#3d5482',
+          500: '#5b729e',
+          400: '#8598b5',
+          300: '#b3c0d4',
+          200: '#d5dce8',
+          100: '#e8ecf2',
         },
-        // Soft teal — modern research accent
-        teal: {
-          300: '#7ee0d0',
-          400: '#4dd0bc',
-          500: '#2bb5a0',
-          600: '#1f9182',
+        // Academic royal blue — primary accent
+        accent: {
+          700: '#1d4f9c',
+          600: '#2563b8',
+          500: '#3b78cc',
+          100: '#dbe8f8',
+          50:  '#eef4fc',
+        },
+        // Muted brass — used sparingly for highlights and rules
+        brass: {
+          700: '#8a6414',
+          600: '#a67c1a',
+          500: '#b98a1f',
+          100: '#f3e8c8',
+          50:  '#faf3dd',
         },
       },
       fontFamily: {
         serif: ['"Source Serif 4"', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'Fira Code', 'monospace'],
+      },
+      boxShadow: {
+        card: '0 1px 2px rgba(20, 33, 61, 0.05), 0 4px 16px rgba(20, 33, 61, 0.05)',
+        lift: '0 2px 4px rgba(20, 33, 61, 0.06), 0 10px 28px rgba(20, 33, 61, 0.09)',
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out',

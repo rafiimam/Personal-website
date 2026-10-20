@@ -7,7 +7,7 @@ export interface Publication {
   role: 'First Author' | 'Co-author' | 'Fourth Author' | 'Lead Author';
   venue: string;
   year: number;
-  category: 'SALLoRA / PEFT' | 'NLP' | 'Computer Vision' | 'Federated Learning' | 'Medical AI';
+  category: 'PEFT / Robust ML' | 'NLP' | 'Computer Vision' | 'Federated Learning' | 'Medical AI';
   abstract: string;
   contributions: string[];
   pdfUrl: string;
@@ -27,9 +27,9 @@ export interface DocumentAsset {
 
 export const PERSONAL_INFO = {
   name: "MD. Rafi Imam",
-  title: "Researcher in Multimodal AI & Autonomous Systems | Software Development Officer",
-  affiliation: "Jamuna Bank PLC (AI & Automation Division) & RUET ECE Graduate",
-  targetRole: "Prospective Ph.D. Candidate — Fall 2027",
+  title: "Software Development Officer — AI & Automation Division, Jamuna Bank PLC",
+  affiliation: "B.Sc. in Electrical & Computer Engineering, RUET (2018–2023)",
+  targetRole: "Prospective Ph.D. Candidate — Fall 2027 (AI / Machine Learning)",
   email: "rafiimam96@gmail.com",
   phone: "+880 1727-789497",
   location: "Dhaka, Bangladesh",
@@ -37,13 +37,14 @@ export const PERSONAL_INFO = {
   researchGateUrl: "https://www.researchgate.net/profile/Rafi-Imam",
   githubUrl: "https://github.com/rafiimam",
   linkedInUrl: "https://linkedin.com/in/rafiimam",
-  bio: `Investigating how artificial intelligence perceives, adapts, and reasons over time. My work focuses on multimodal foundation models, vision-language reasoning, and developing parameter-efficient frameworks to empower self-evolving AI agents. Currently a Software Development Officer in the AI & Automation Division at Jamuna Bank PLC and an Electrical and Computer Engineering graduate from RUET, Bangladesh.`,
+  bio: `I study how machine learning models can be adapted efficiently and reliably when the data they face is degraded, shifted, or adversarial. My independent research examines parameter-efficient fine-tuning (PEFT) under structured input corruption, with an emphasis on controlled evaluation — matched protocols, capacity controls, and honest reporting of negative results. In industry, I build production AI for commercial banking at Jamuna Bank PLC, including a face liveness and presentation-attack-detection system now serving live traffic. I am applying to Ph.D. programs for Fall 2027 to pursue robust, efficient, and trustworthy machine learning.`,
   researchInterests: [
-    "Machine Learning & Natural Language Processing",
-    "Computer Vision & Multimodal Systems",
     "Parameter-Efficient Fine-Tuning (PEFT, LoRA)",
     "Robust Learning under Structured Input Corruption",
-    "AI Systems Engineering & Applied AI in Real-World Systems"
+    "Trustworthy & Responsible AI",
+    "Representation Uncertainty Quantification",
+    "Efficient Adaptation of Foundation Models",
+    "Computer Vision & Document Understanding"
   ]
 };
 
@@ -52,120 +53,164 @@ export const METRICS = [
   { label: "Last 60 Credits GPA", value: "3.55", description: "Out of 4.00 (RUET ECE)" },
   { label: "GRE Quantitative", value: "164", description: "GRE Total: 304" },
   { label: "IELTS Academic", value: "7.0", description: "Overall Band (CEFR C1)" },
-  { label: "Industry Experience", value: "2.5+", description: "Years in Production AI & Systems" }
+  { label: "Production PAD System", value: "0.00% FAR", description: "Locked-set evaluation, Jamuna Bank" }
 ];
 
-// ─── FLAGSHIP RESEARCH: SALLoRA (v2 — corrected) ─────────────────────────────
-export const SALLORA_RESEARCH = {
-  title: "SALLoRA: Sensitivity-Aware Layer-wise Low-Rank Adaptation under Structured Input Corruption",
-  subtitle: "Robust PEFT on LayoutLMv3 | FUNSD Benchmark | OCR Corruption 50%–80%",
-  status: "Active Research — Progress Report v2, August 2026",
+// ─── FLAGSHIP RESEARCH: When does PEFT help under synthetic document noise? ──
+// A controlled diagnostic study. All numbers below are from the locked,
+// matched 5-seed protocol in the gateconcat-peft repository and the paper
+// "When Does PEFT Help under Synthetic Document Noise?" (2026).
+export const FLAGSHIP_RESEARCH = {
+  title: "When Does PEFT Help under Synthetic Document Noise?",
+  subtitle: "A Controlled Study of Gating, Capacity, and Robustness — LayoutLMv3 · FUNSD · LoRA",
+  status: "Independent Research Manuscript — 2026",
   backbone: "LayoutLMv3-base (microsoft/layoutlmv3-base)",
   benchmark: "FUNSD (Form Understanding in Noisy Scanned Documents)",
-  notebookUrl: "https://github.com/rafiimam/noise-robust-peft/tree/main/notebooks",
-  problemStatement: "Standard LoRA applies the same low-rank adaptation uniformly across all layers and samples. While this works well for clean inputs, it can overfit to noise patterns when the input itself is corrupted, leading to poor generalization on clean test data. SALLoRA addresses the research question: Can we make LoRA robust to input corruption without sacrificing parameter efficiency or clean-data performance?",
-  components: [
+  repoUrl: "https://github.com/rafiimam/gateconcat-peft",
+  question: "PEFT mechanisms designed to respond to input corruption are usually credited with detecting and suppressing corrupted evidence. This study asks a prior question: when such a method improves performance, is it because it identifies corrupted tokens — or simply because it adds classifier capacity? All methods are compared under one locked protocol: five seeds, identical optimizer settings, and capacity-matched controls.",
+  protocol: [
+    { label: "Seeds", value: "5 (42, 123, 2024, 456, 789)" },
+    { label: "LoRA config", value: "r = 16, α = 32, dropout 0.1" },
+    { label: "Optimizer", value: "AdamW, lr 2×10⁻⁴ for every method" },
+    { label: "Training", value: "15 epochs, batch 4, linear schedule" },
+    { label: "Metric", value: "Entity-level macro-F1 on the noisy test set" },
+    { label: "Controls", value: "Constant-gate (g ≡ 0.5), oracle & auxiliary-supervised gates" }
+  ],
+  // Noisy-test macro-F1 (mean of 5 seeds). frozen = constant-gate capacity control.
+  results: [
     {
-      name: "Linear Probing Warm-up",
-      desc: "Freeze the LoRA adapters; train only the classifier head for 2 epochs. Prevents uncalibrated gradients from distorting the backbone before adaptation begins — stabilizing the classifier before adapter updates."
+      id: "sub70",
+      label: "Character substitution · 70%",
+      lora: 0.731, frozen: 0.734, gateconcat: 0.747,
+      delta: "+1.51 pp", pValue: "p = 0.003",
+      note: "Statistically significant gain over LoRA."
     },
     {
-      name: "Layer-wise Learnable Scaling",
-      desc: "Each transformer layer l is assigned a learnable scalar s_l, passed through a sigmoid gate r_l = σ(s_l). Hidden-state update: H_l = H_(l-1) + r_l · ΔW_l(H_(l-1)). Different layers adapt with different strengths — shallow layers focus on local features, deeper layers preserve higher-level semantics."
+      id: "ocr70",
+      label: "OCR confusion · 70%",
+      lora: 0.731, frozen: 0.739, gateconcat: 0.754,
+      delta: "+2.30 pp", pValue: "p = 0.002",
+      note: "Largest gain. The constant-gate control captures +0.74 pp of it; GateConcat vs. control is not significant (p = 0.21)."
     },
     {
-      name: "Token-Level Quality Weighting",
-      desc: "OCR corruption is spatially localized — only a fraction of tokens are corrupted. Quality weights: 1.0 for clean tokens, 0.1 for corrupted tokens, 0.0 for padding. Training loss is a quality-weighted mean over tokens, preserving full spatial-visual context while focusing learning on trustworthy regions."
+      id: "delete70",
+      label: "Character deletion · 70%",
+      lora: 0.730, frozen: null, gateconcat: 0.750,
+      delta: "+2.0 pp", pValue: "p = 0.07",
+      note: "Positive trend; not significant at 5 seeds."
     },
     {
-      name: "Soft Sensitivity Masking",
-      desc: "Instead of hard-freezing less-sensitive parameters, gradients are scaled by γ = 0.15: ∇θ ← ∇θ ⊙ M + ∇θ ⊙ (1−M) · γ. M is a binary mask (top 20% of parameters per layer by gradient magnitude). Damps noise propagation while preserving full adapter capacity."
+      id: "insert70",
+      label: "Character insertion · 70%",
+      lora: 0.737, frozen: null, gateconcat: 0.745,
+      delta: "+0.7 pp", pValue: "p = 0.13",
+      note: "Small, non-significant gain."
     },
     {
-      name: "Future: UniMoE-PEFT (Planned — Not Yet Validated)",
-      desc: "Extending SALLoRA to dynamically route tokens to different adapter experts (Mixture-of-Experts). Would allow the model to specialize different adapters for substitution, deletion, and insertion corruption types. Motivated by current findings, but not yet experimentally validated."
+      id: "box50",
+      label: "Layout box-swap · 50%",
+      lora: 0.747, frozen: null, gateconcat: 0.745,
+      delta: "−0.2 pp", pValue: "n.s.",
+      note: "No transfer to spatial corruption — the gains are text-specific."
     }
   ],
-  results: [
-    { method: "Standard LoRA", corruption: "50%", mean: 0.7738, std: 0.0042, note: "Baseline (no robustness)" },
-    { method: "SALLoRA (Ours)", corruption: "50%", mean: 0.7996, std: 0.0031, note: "+0.0258 F1, p=0.008" },
-    { method: "Standard LoRA", corruption: "70%", mean: 0.7479, std: 0.0062, note: "Baseline" },
-    { method: "SALLoRA (Ours)", corruption: "70%", mean: 0.7935, std: 0.0121, note: "+0.0456 F1, p=0.015" },
-    { method: "Standard LoRA", corruption: "80%", mean: 0.7292, std: 0.0106, note: "Baseline" },
-    { method: "SALLoRA (Ours)", corruption: "80%", mean: 0.7786, std: 0.0064, note: "+0.0494 F1, p=0.011" }
+  findings: [
+    {
+      title: "Hand-crafted robustness failed",
+      body: "SALLoRA — token quality weighting, layer-wise scalars, and gradient sensitivity masking — never beat standard LoRA under the matched protocol, degrading macro-F1 by up to −3.09 points under 70% OCR confusion. A documented negative result, reported as such."
+    },
+    {
+      title: "A learned gate helps under severe text noise",
+      body: "GateConcat, which concatenates one learned scalar per token with the LoRA representation before classification, improves noisy macro-F1 by +1.51 pp (substitution) and +2.30 pp (OCR confusion) at 70% corruption — both significant across five seeds."
+    },
+    {
+      title: "But capacity explains part of the gain",
+      body: "A constant gate (g ≡ 0.5) with identical classifier dimensionality captures a substantial share of the improvement (+0.74 pp on OCR noise). GateConcat does not significantly outperform this capacity control (p = 0.21), so the honest attribution is capacity and label-salience, not noise detection."
+    },
+    {
+      title: "The gate is not a corruption detector",
+      body: "The learned gate's corruption-detection AUC is ≈ 0.52 (chance level; correlation −0.025). Forcing explicit detection via auxiliary supervision (AUC ≈ 0.91) yields zero downstream F1 benefit — detection and task performance are decoupled."
+    }
   ],
-  ablation: [
-    { config: "Standard LoRA (baseline)", f1: 0.7738, std: 0.0042, delta: "—" },
-    { config: "+ Linear probing warm-up", f1: 0.7812, std: 0.0038, delta: "+0.0074" },
-    { config: "+ Layer-wise learnable scalars", f1: 0.7885, std: 0.0041, delta: "+0.0147" },
-    { config: "+ Token-level quality weighting", f1: 0.7941, std: 0.0035, delta: "+0.0203" },
-    { config: "+ Soft sensitivity masking (full SALLoRA)", f1: 0.7996, std: 0.0031, delta: "+0.0258" }
-  ],
-  pdfUrl: assetUrl("./docs/MD_Rafi_Imam_SALLoRA_Research_Progress_Report_v2.pdf"),
+  pdfUrl: assetUrl("./docs/MD_Rafi_Imam_When_Does_PEFT_Help_Under_Synthetic_Document_Noise.pdf"),
   summaryPdfUrl: assetUrl("./docs/MD_Rafi_Imam_ResearchSummary.pdf")
 };
 
-// ─── ENTERPRISE AI SYSTEM ─────────────────────────────────────────────────────
+// ─── PRODUCTION AI: Liveness verification & PAD at Jamuna Bank ───────────────
 export const ENTERPRISE_AI_PROJECT = {
   title: "Real-Time Face Liveness Verification & Presentation Attack Detection",
-  subtitle: "Production-Grade AI System for High-Security Commercial Banking",
-  context: "Designed and deployed at Jamuna Bank PLC's AI & Automation Division — decoupling heavy PyTorch CUDA inferences (FastAPI) from a stateless asynchronous gateway orchestrator, reducing evaluation latency from >5.0s to ~800ms.",
-  keyMetric: "Latency: >5.0s → ~800ms via decoupled async architecture",
-  githubUrl: "https://github.com/rafiimam/Real_Time_Liveness_Verification_Presentation_Attack_Detection",
+  subtitle: "Production AI System — Jamuna Bank PLC, AI & Automation Division",
+  context: "A fail-closed, three-layer verification cascade for high-value banking transactions: document-to-live face matching (ArcFace + pgvector), spatial and spatiotemporal liveness (Swin-B, 3D ResNet-18), and physics-informed presentation-attack detection (FFT spectral analysis, Lucas–Kanade optical flow). Heavy PyTorch CUDA inference (FastAPI) is decoupled from a stateless asyncio gateway, cutting end-to-end latency from over 5 seconds to roughly 800 ms.",
+  keyMetric: "Locked-set result: FAR 0.00% (0/33 replay) · FRR 3.125% (1/32 live) · ~800 ms latency",
+  githubUrl: "https://github.com/rafiimam/jbl-liveness-verification",
+  campaign: [
+    {
+      stage: "Initial deployment",
+      detail: "Frozen-backbone spatial model on live mobile traffic: zero replay accepts, but compression and sensor noise caused a 56.25% false-rejection rate (18/32) on confirmed live captures.",
+      far: "0.00% (0/33)", frr: "56.25% (18/32)", outcome: "Not promoted"
+    },
+    {
+      stage: "Head-only fine-tune",
+      detail: "Fine-tuning only the attack-detection head did not resolve the live/replay feature collision.",
+      far: "0.00% (0/33)", frr: "53.13% (17/32)", outcome: "Rolled back"
+    },
+    {
+      stage: "Swin-B Stage-3 upgrade",
+      detail: "Unfroze Stage-3 backbone features (mid-level texture depth) and fine-tuned on human-reviewed phone captures against the locked replay set, under a strict ship rule (FAR ≤ 0%, FRR ≤ 15%).",
+      far: "0.00% (0/33)", frr: "3.125% (1/32)", outcome: "Promoted to production"
+    }
+  ],
   architectureHighlights: [
     {
       name: "Decoupled CUDA Inference + Async Orchestration",
-      detail: "Heavy models isolated on a FastAPI CUDA server. Stateless Gateway Orchestrator fires spatial, temporal, physics-based, and identity checks concurrently via asyncio.gather() — critical path latency: ~800ms."
+      detail: "Neural inference (MTCNN, Swin-B + UAD head, ArcFace, 3D ResNet-18) is isolated on a FastAPI CUDA server; a stateless gateway fires the conditionally independent checks concurrently with asyncio.gather — critical-path latency ≈ 800 ms."
     },
     {
-      name: "Swin-B Transformer with Forward Hooks",
-      detail: "Applied Swin-B forward hooks for intermediate feature extraction, supporting OCR pipelines, face matching, and structured data extraction for real-world decision workflows."
+      name: "Mid-Backbone Feature Hook",
+      detail: "The attack-detection head reads Swin-B Stage-3 features, which retain the texture cues (print matrices, display sub-pixel artifacts) that final-layer semantic features discard."
     },
     {
-      name: "SALLoRA Online Background Updates",
-      detail: "Integrated client-side SALLoRA background workers to execute 2-epoch online micro-batch updates via a security API, enabling hot-reloading of calibrated model weights with zero system downtime."
+      name: "Physics-Informed Replay Detection",
+      detail: "Column/row-FFT spectral periodicity and Lucas–Kanade affine residuals detect physical screens deterministically, complementing the learned models — including a composite rule requiring two distinct display indicators, after live audits showed phone compression mimicking single-stripe LCD cues."
     },
     {
-      name: "Event-Driven Data Streaming",
-      detail: "Architected event-driven, high-concurrency data streaming pipelines using Apache Kafka and Docker to ingest and process transaction-triggered risk flags."
+      name: "Anti-Injection & Identity Infrastructure",
+      detail: "Session nonces (TTL 120 s), timestamp monotonicity checks, and 512-D ArcFace embeddings indexed in PostgreSQL/pgvector for sub-millisecond identity search across enrolled ID media."
     },
     {
-      name: "AML Checks & Risk-Aware Profiling",
-      detail: "Developed data processing and validation pipelines involving AML checks, deduplication, and transaction profiling for risk-aware systems."
+      name: "Event-Driven Risk Pipelines",
+      detail: "Apache Kafka pipelines process transaction-triggered risk flags, AML checks, deduplication, and transaction profiling around the verification flow."
     }
   ],
-  techStack: ["PyTorch", "Swin-B Transformer", "FastAPI", "asyncio", "Apache Kafka", "Docker", "PostgreSQL", "WebSocket", "Firebase"],
-  researchRelevance: "This production system directly applies SALLoRA background workers for continual fraud-pattern adaptation — providing real-world validation that sensitivity-aware PEFT can serve as a hot-reloadable continual learning backbone in high-stakes commercial deployments.",
+  techStack: ["PyTorch", "Swin Transformer", "FastAPI", "asyncio", "Apache Kafka", "Docker", "PostgreSQL + pgvector", "WebSocket"],
+  researchRelevance: "The deployment doubles as an adaptation case study: a production model failing under real distribution shift, a failed fix that was measured and rolled back, and a successful upgrade promoted only after meeting pre-registered error budgets on a locked evaluation set. That diagnostic discipline — hypothesize, measure, ship or roll back — is the same methodology as my PEFT research.",
   pdfUrl: assetUrl("./docs/Enterprise_AI_System_Real_Time_Liveness_Verification_and_PAD.pdf")
 };
 
 // ─── PUBLICATIONS ─────────────────────────────────────────────────────────────
 export const PUBLICATIONS: Publication[] = [
   {
-    id: "sallora-2026",
-    title: "SALLoRA: Sensitivity-Aware Layer-wise Low-Rank Adaptation under Structured Input Corruption",
+    id: "peft-noise-2026",
+    title: "When Does PEFT Help under Synthetic Document Noise? A Controlled Study of Gating, Capacity, and Robustness",
     authors: "MD. Rafi Imam",
     role: "Lead Author",
-    venue: "Progress Report v2 — August 2026 (Independent Research, RUET ECE)",
+    venue: "Independent Research Manuscript — 2026",
     year: 2026,
-    category: "SALLoRA / PEFT",
-    abstract: "We study whether parameter-efficient fine-tuning (PEFT) can be made robust to structured input corruption — specifically OCR-induced noise — in document understanding tasks. SALLoRA combines a linear-probing warm-up, layer-wise learnable adaptation scaling, token-level quality weighting, and soft sensitivity masking. All experiments were rerun from scratch under a unified training pipeline for a fair, controlled comparison. SALLoRA consistently outperforms Standard LoRA across three OCR corruption levels (50%, 70%, 80%) on FUNSD, with the performance gap widening as corruption increases. Results are statistically significant (p < 0.05) across all conditions.",
+    category: "PEFT / Robust ML",
+    abstract: "A controlled diagnostic study of gated PEFT for token-level entity recognition on FUNSD with LayoutLMv3 and LoRA, under a matched five-seed protocol. A hand-crafted quality-weighting method (SALLoRA) consistently fails to improve over standard LoRA, degrading macro-F1 by up to 3.09 points. A simpler learned-gate method (GateConcat) improves noisy macro-F1 by +1.51 and +2.30 points under severe text corruption — but a constant-gate capacity control captures part of the gain, the learned gate does not detect corruption (AUC ≈ 0.52), and the gains do not transfer to layout noise. Robustness claims require capacity-matched controls.",
     contributions: [
-      "Identified and formulated the 'noisy-input PEFT' problem — distinct from label-noise robustness literature (DeLoRA, CleaR, LoPE all focus on label noise; SALLoRA targets OCR input corruption).",
-      "Designed 4-component framework: linear probing warm-up, layer-wise learnable scaling, token-level quality weighting (q_i: 1.0 clean / 0.1 corrupted / 0.0 padding), and soft gradient masking (γ=0.15).",
-      "Reran all experiments from scratch under a unified pipeline with full fairness checklist — correcting earlier claims from a prior draft.",
-      "Reported F1: 0.7996±0.0031 at 50% corruption (+0.0258), 0.7935±0.0121 at 70% (+0.0456), 0.7786±0.0064 at 80% (+0.0494) — all statistically significant (paired t-tests, p<0.05).",
-      "Conducted full ablation study isolating each component's contribution — soft sensitivity masking and token-level quality weighting provide the largest gains.",
-      "Documented honest limitations and threats to validity — single benchmark (FUNSD), single backbone (LayoutLMv3), synthetic noise only."
+      "Locked, matched evaluation protocol: five seeds, identical optimizer and LoRA configuration for every method, paired significance tests.",
+      "Documented negative result: hand-crafted quality weighting and gradient masking (SALLoRA) degrade macro-F1 by up to −3.09 points under 70% OCR confusion.",
+      "GateConcat: +1.51 pp (p = 0.003) and +2.30 pp (p = 0.002) noisy macro-F1 over LoRA under 70% substitution and OCR confusion.",
+      "Capacity attribution: a constant-gate control (g ≡ 0.5) captures +0.74 pp of the OCR gain; GateConcat vs. control is not significant (p = 0.21).",
+      "Mechanism analysis: learned gate AUC ≈ 0.52 for corruption detection; auxiliary supervision reaching AUC ≈ 0.91 gives zero downstream F1 benefit; no transfer to layout box-swap (−0.20 pp)."
     ],
-    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_SALLoRA_Research_Progress_Report_v2.pdf"),
-    bibtex: `@techreport{imam2026sallora,
-  title={SALLoRA: Sensitivity-Aware Layer-wise Low-Rank Adaptation under Structured Input Corruption},
+    pdfUrl: assetUrl("./docs/MD_Rafi_Imam_When_Does_PEFT_Help_Under_Synthetic_Document_Noise.pdf"),
+    bibtex: `@misc{imam2026peftnoise,
+  title={When Does PEFT Help under Synthetic Document Noise? A Controlled Study of Gating, Capacity, and Robustness},
   author={Imam, MD. Rafi},
-  institution={RUET, Department of Electrical and Computer Engineering},
   year={2026},
-  month={August},
-  note={Progress Report v2}
+  note={Independent research manuscript}
 }`,
     highlight: true
   },
@@ -259,7 +304,7 @@ export const PUBLICATIONS: Publication[] = [
     ],
     pdfUrl: assetUrl("./docs/YOLOv8 Based Object Detection for Self-driving Cars.pdf"),
     bibtex: `@inproceedings{afrin2023yolov8,
-  title={YOLOv8-based Object Detection for Self-driving Cars},
+  title={YOLOv8-based Object Detection for Self-Driving Cars},
   author={Afrin, Zakia and Tabassum, Fatima and Kibria, Hasibul Bahar and Imam, MD. Rafi and Hasan, Md. Rafiqul},
   booktitle={2023 26th International Conference on Computer and Information Technology (ICCIT)},
   year={2023},
@@ -287,6 +332,46 @@ export const WORK_EXPERIENCE = [
     techStack: ["PyTorch", "Swin-B Transformer", "FastAPI", "asyncio", "Apache Kafka", "Docker", "Node.js", "React", ".NET Core", "PostgreSQL", "MongoDB", "WebSocket"]
   }
 ];
+
+export const SELECTED_SYSTEMS = [
+  {
+    name: "eKYC Platform — Digital Account Opening",
+    stack: ".NET Core · React · Tailwind · Python · FastAPI",
+    points: [
+      "Full-stack digital onboarding with multi-stage approval workflows.",
+      "AI verification pipeline: NID OCR and face matching, document OCR, address extraction, profession prediction.",
+      "AML checks, deduplication, and transaction-behavior capture; real-time communication via WebSocket and Firebase."
+    ]
+  },
+  {
+    name: "Bancassurance Platform",
+    stack: "Node.js · Kafka · MongoDB · Netflix Conductor",
+    points: [
+      "Distributed workflow system integrating multiple insurance providers.",
+      "Event-driven architecture for asynchronous processing, with fault-tolerant callback and retry mechanisms."
+    ]
+  }
+];
+
+// ─── RESEARCH VISION ──────────────────────────────────────────────────────────
+export const RESEARCH_VISION = {
+  statement: "Foundation models are increasingly deployed on inputs that are noisy, shifted, and adversarially manipulated — yet our adaptation methods are mostly validated on clean benchmarks, and our robustness claims often outrun our controls. My doctoral research will focus on making adaptation claims measurable: parameter-efficient methods evaluated under matched protocols and capacity controls, uncertainty estimates that are calibrated rather than decorative, and systems that keep working when the input cannot be trusted.",
+  directions: [
+    {
+      title: "Robust & Efficient Adaptation",
+      body: "PEFT methods whose benefits survive capacity-matched controls and transfer across corruption types — text, layout, and sensor noise — not just the one they were tuned on."
+    },
+    {
+      title: "Trustworthy AI Systems",
+      body: "Fail-closed decision design, pre-registered error budgets, and locked evaluation sets, carried from production banking systems into research methodology."
+    },
+    {
+      title: "Uncertainty Quantification",
+      body: "Representation-level uncertainty that is actually predictive of failure — tested against the null result that a learned 'quality' signal can sit at chance (AUC ≈ 0.52) while still helping the task."
+    }
+  ],
+  seeking: "I am seeking a Fall 2027 Ph.D. position in AI/ML, in a group working on robust or efficient machine learning, trustworthy AI, or foundation-model adaptation. My NJIT Data Science and GMU Computer Science applications are submitted for Fall 2027."
+};
 
 // ─── ACADEMIC CREDENTIALS ─────────────────────────────────────────────────────
 export const ACADEMIC_CREDENTIALS = {
@@ -335,37 +420,46 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     id: "doc-cv",
     title: "Curriculum Vitae (CV)",
     category: "CV",
-    description: "Complete academic CV detailing education, publications, independent research (SALLoRA), production AI systems at Jamuna Bank, and technical skills.",
-    fileUrl: assetUrl("./docs/MD_Rafi_Imam_CV.pdf"),
-    fileSize: "126 KB",
-    date: "August 2026"
+    description: "Complete academic CV: education, four IEEE publications, the GateConcat / SALLoRA diagnostic study, production AI systems at Jamuna Bank, and technical skills.",
+    fileUrl: assetUrl("./docs/MD_RAFI_IMAM_CV.pdf"),
+    fileSize: "134 KB",
+    date: "October 2026"
   },
   {
-    id: "doc-sallora-v2",
-    title: "SALLoRA Research Progress Report v2",
+    id: "doc-peft-paper",
+    title: "When Does PEFT Help under Synthetic Document Noise?",
     category: "Research",
-    description: "Updated research report introducing SALLoRA — Sensitivity-Aware Layer-wise LoRA with token-level quality weighting and soft sensitivity masking. Rerun from scratch with full fairness checklist and statistical significance tests. F1: 0.7996±0.0031 at 50% OCR corruption.",
-    fileUrl: assetUrl("./docs/MD_Rafi_Imam_SALLoRA_Research_Progress_Report_v2.pdf"),
-    fileSize: "199 KB",
-    date: "August 2026"
+    description: "Full manuscript of the controlled GateConcat study: matched 5-seed protocol, capacity controls, and mechanism analysis of gating under OCR corruption.",
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_When_Does_PEFT_Help_Under_Synthetic_Document_Noise.pdf"),
+    fileSize: "179 KB",
+    date: "2026"
   },
   {
     id: "doc-research-summary",
-    title: "Research Interest Summary",
+    title: "Research Summary",
     category: "Research",
-    description: "Concise research interest summary covering PEFT, multimodal systems, and AI systems engineering — written for faculty review and PhD application alignment.",
+    description: "One-page summary of research direction: robust and efficient adaptation under input corruption, the completed diagnostic study, and doctoral research plans.",
     fileUrl: assetUrl("./docs/MD_Rafi_Imam_ResearchSummary.pdf"),
-    fileSize: "150 KB",
+    fileSize: "5 KB",
     date: "2026"
   },
   {
     id: "doc-enterprise-ai",
-    title: "Enterprise AI: Liveness Verification & PAD System",
+    title: "Liveness Verification & PAD — Research Profile",
     category: "Research",
-    description: "Production-grade Face Liveness Verification and Presentation Attack Detection system engineered for Jamuna Bank PLC — Swin-B forward hooks, async CUDA inference, Kafka event-driven pipelines, and SALLoRA online updates.",
+    description: "Production face liveness and presentation-attack-detection system at Jamuna Bank PLC, including the locked-set adaptation campaign: FAR 0.00% (0/33), FRR 3.125% (1/32).",
     fileUrl: assetUrl("./docs/Enterprise_AI_System_Real_Time_Liveness_Verification_and_PAD.pdf"),
-    fileSize: "10 KB",
+    fileSize: "139 KB",
     date: "2026"
+  },
+  {
+    id: "doc-selected-pubs",
+    title: "Selected Publications",
+    category: "Research",
+    description: "Summary of the four IEEE ICCIT 2023 publications with venues and contributions.",
+    fileUrl: assetUrl("./docs/MD_Rafi_Imam_Selected_Publications.pdf"),
+    fileSize: "105 KB",
+    date: "2023"
   },
   {
     id: "doc-suicidal-nlp",
@@ -373,7 +467,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     category: "Research",
     description: "First-author IEEE paper on suicidal ideation detection from Reddit data using LSTM and Random Forest classifiers — 93% accuracy with an original curated dataset.",
     fileUrl: assetUrl("./docs/Suicidal Thought Detection Using NLP(Natural Language Processing) on Reddit Data.pdf"),
-    fileSize: "199 KB",
+    fileSize: "194 KB",
     date: "December 2023"
   },
   {
@@ -382,7 +476,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     category: "Research",
     description: "IEEE paper on federated learning for lung cancer CT classification using distributed InceptionV3 feature extractors — without centralizing sensitive medical data.",
     fileUrl: assetUrl("./docs/Privacy Preserving Federated Learning for Lung Cancer Classification.pdf"),
-    fileSize: "2.6 MB",
+    fileSize: "2.5 MB",
     date: "December 2023"
   },
   {
@@ -400,7 +494,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     category: "Research",
     description: "IEEE paper comparing XGBoost, Random Forest, and SVM for Polycystic Ovary Syndrome classification from clinical biomarkers with feature importance analysis.",
     fileUrl: assetUrl("./docs/A Comparative Study for Detecting Polycystic Ovary Syndrome Using A Machine Learning Framework.pdf"),
-    fileSize: "307 KB",
+    fileSize: "299 KB",
     date: "December 2023"
   },
   {
@@ -409,7 +503,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     category: "Test Scores",
     description: "Official ETS score report: GRE Total 304 — Quantitative 164, Verbal 140, AWA 3.0. Test date: Sept 20, 2025.",
     fileUrl: assetUrl("./docs/MD_Rafi_Imam_GRE.pdf"),
-    fileSize: "447 KB",
+    fileSize: "436 KB",
     date: "Sept 20, 2025"
   },
   {
@@ -418,7 +512,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     category: "Test Scores",
     description: "Official IELTS Academic report: Overall Band 7.0 (CEFR C1). Listening 7.0, Reading 7.0, Writing 6.5, Speaking 6.5. Test date: Nov 28, 2025.",
     fileUrl: assetUrl("./docs/MD_Rafi_Imam_IELTS.pdf"),
-    fileSize: "1.0 MB",
+    fileSize: "994 KB",
     date: "Nov 28, 2025"
   },
   {
@@ -427,7 +521,7 @@ export const DOCUMENT_ASSETS: DocumentAsset[] = [
     category: "Transcript",
     description: "Official RUET B.Sc. ECE transcript — CGPA 3.30/4.00, Last 60 Credit Hours GPA 3.55/4.00.",
     fileUrl: assetUrl("./docs/MD_Rafi_Imam_Transcript.pdf"),
-    fileSize: "10.1 MB",
+    fileSize: "9.6 MB",
     date: "October 2023"
   }
 ];
