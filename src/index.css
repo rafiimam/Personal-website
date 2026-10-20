@@ -7,66 +7,73 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-base-900 text-slate-300 antialiased;
+    @apply bg-paper-100 text-slate-700 antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   ::selection {
-    @apply bg-gold-400/30 text-gold-100;
+    @apply bg-accent-100 text-ink-900;
   }
 }
 
 @layer components {
-  /* Academic card — subtle warmth, no gimmicks */
+  /* Light academic card */
   .card {
-    @apply bg-base-800/70 border border-base-700/60 rounded-xl;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    @apply bg-white border border-ink-100 rounded-2xl shadow-card;
   }
   .card-hover {
     @apply transition-all duration-300 ease-out;
   }
   .card-hover:hover {
-    @apply border-base-600 bg-base-750/80;
+    @apply shadow-lift border-ink-200;
     transform: translateY(-1px);
   }
 
-  /* Section divider — warm gold gradient line */
+  /* Section eyebrow — small mono label above headings */
+  .eyebrow {
+    @apply font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-700;
+  }
+
+  /* Hairline rule with a brass centre fade */
   .section-divider {
     @apply h-px w-full;
-    background: linear-gradient(90deg, transparent, rgba(245, 190, 58, 0.25), transparent);
+    background: linear-gradient(90deg, transparent, rgba(166, 124, 26, 0.35), transparent);
   }
 
-  /* Gold underline for emphasis */
-  .gold-underline {
-    @apply decoration-gold-400/50 underline underline-offset-4 decoration-2;
-  }
-
-  /* Pill badge styles */
+  /* Pill badges */
   .badge {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium font-mono tracking-wide;
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium;
   }
-  .badge-gold {
-    @apply bg-gold-400/10 text-gold-300 border border-gold-400/20;
+  .badge-accent {
+    @apply bg-accent-50 text-accent-700 border border-accent-100;
   }
-  .badge-teal {
-    @apply bg-teal-400/10 text-teal-300 border border-teal-400/20;
+  .badge-brass {
+    @apply bg-brass-50 text-brass-700 border border-brass-100;
   }
   .badge-subtle {
-    @apply bg-base-700/60 text-slate-400 border border-base-600/40;
+    @apply bg-paper-200 text-slate-600 border border-ink-100;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-ink-800;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-5 py-2.5 text-sm font-semibold text-ink-900 transition-colors hover:border-ink-300 hover:bg-paper-50;
   }
 }
 
-/* Custom Scrollbar — minimal, dark */
+/* Minimal light scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #080c16;
+  background: #faf8f3;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e2a42;
-  border-radius: 3px;
+  background: #d5dce8;
+  border-radius: 6px;
+  border: 2px solid #faf8f3;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #27364f;
+  background: #b3c0d4;
 }

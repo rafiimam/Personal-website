@@ -1,92 +1,73 @@
 import React, { useState } from 'react';
-import { Download, Eye } from 'lucide-react';
-import { DOCUMENT_ASSETS } from '../data/content';
+import { Download, Eye, FileText } from 'lucide-react';
+import { DOCUMENT_ASSETS, type DocumentAsset } from '../data/content';
 
 interface DocumentHubProps {
-  onViewPdf: (title: string, url: string) => void;
+  onViewPdf: (title: string, pdfUrl: string) => void;
 }
 
+const CATEGORIES: Array<'All' | DocumentAsset['category']> = ['All', 'CV', 'Research', 'Test Scores', 'Transcript'];
+
 export const DocumentHub: React.FC<DocumentHubProps> = ({ onViewPdf }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-
-  const categories = ['All', 'CV', 'Research', 'Test Scores', 'Transcript'];
-
-  const filtered = selectedCategory === 'All'
-    ? DOCUMENT_ASSETS
-    : DOCUMENT_ASSETS.filter(d => d.category === selectedCategory);
+  const [filter, setFilter] = useState<(typeof CATEGORIES)[number]>('All');
+  const docs = DOCUMENT_ASSETS.filter((d) => filter === 'All' || d.category === filter);
 
   return (
-    <section id="documents" className="py-20 relative">
+    <section id="documents" className="py-20 sm:py-24 bg-paper-200/50">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="section-divider mb-16" />
+        <p className="eyebrow">Document Hub</p>
+        <h2 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-ink-900">
+          Application documents
+        </h2>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
+          Everything an admissions committee or prospective advisor needs, in one place — current versions only.
+        </p>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-          <div>
-            <p className="text-xs font-mono tracking-widest uppercase text-gold-400/80 mb-3">
-              Complete Application Materials
-            </p>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white leading-snug">
-              Document Repository
-            </h2>
-            <p className="text-sm text-slate-400 mt-2">
-              All academic documents available for review and download.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-1.5">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  selectedCategory === cat
-                    ? 'bg-gold-400 text-base-900 font-bold'
-                    : 'bg-base-800 text-slate-400 hover:text-white hover:bg-base-750 border border-base-700/40'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+        {/* Filters */}
+        <div className="mt-8 flex flex-wrap gap-2">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilter(cat)}
+              className={`px-3.5 py-2 rounded-lg text-[13px] font-medium border transition-all ${
+                filter === cat
+                  ? 'bg-ink-900 text-white border-ink-900'
+                  : 'bg-white text-slate-600 border-ink-100 hover:border-ink-300 hover:text-ink-900'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
-        {/* Document grid — compact, functional */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((doc) => (
-            <div key={doc.id} className="card p-5 card-hover group flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="badge badge-gold text-[10px]">{doc.category}</span>
-                  <span className="text-[10px] text-slate-500 font-mono">{doc.fileSize}</span>
-                </div>
-
-                <h3 className="text-sm font-bold text-white group-hover:text-gold-300 transition-colors mb-2 leading-snug">
-                  {doc.title}
-                </h3>
-
-                <p className="text-[12px] text-slate-400 leading-relaxed mb-4">
-                  {doc.description}
-                </p>
+        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {docs.map((doc) => (
+            <article key={doc.id} className="card card-hover p-5 flex flex-col">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-accent-50 text-accent-700">
+                  <FileText className="w-[18px] h-[18px]" />
+                </span>
+                <span className="badge badge-subtle">{doc.category}</span>
               </div>
-
-              <div className="flex items-center justify-between pt-3 border-t border-base-700/30">
+              <h3 className="mt-4 font-serif text-[17px] font-bold text-ink-900 leading-snug">{doc.title}</h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500 flex-1">{doc.description}</p>
+              <p className="mt-3 font-mono text-[11px] text-slate-400">{doc.fileSize} · {doc.date}</p>
+              <div className="mt-4 flex gap-2">
                 <button
                   onClick={() => onViewPdf(doc.title, doc.fileUrl)}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-gold-300 hover:text-gold-200 transition"
+                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-ink-900 px-3 py-2 text-[13px] font-semibold text-white hover:bg-ink-800 transition"
                 >
-                  <Eye className="w-3.5 h-3.5" />
-                  Preview
+                  <Eye className="w-4 h-4" /> View
                 </button>
                 <a
                   href={doc.fileUrl}
                   download
-                  className="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-white transition"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-ink-200 bg-white px-3 py-2 text-[13px] font-semibold text-ink-900 hover:border-ink-300 hover:bg-paper-50 transition"
                 >
-                  <Download className="w-3.5 h-3.5" />
-                  Download
+                  <Download className="w-4 h-4" />
                 </a>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

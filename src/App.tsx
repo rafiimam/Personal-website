@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ResearchArtifacts } from './components/ResearchArtifacts';
+import { GateConcatVisualizer } from './components/GateConcatVisualizer';
 import { ResearchVision } from './components/ResearchVision';
-import { SalloraVisualizer } from './components/SalloraVisualizer';
 import { Publications } from './components/Publications';
 import { SystemsEngineering } from './components/SystemsEngineering';
+import { Experience } from './components/Experience';
 import { AcademicCredentials } from './components/AcademicCredentials';
 import { DocumentHub } from './components/DocumentHub';
 import { ContactFooter } from './components/ContactFooter';
@@ -31,21 +32,22 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-900 text-slate-200 selection:bg-gold-400/30 selection:text-gold-100">
+    <div className="min-h-screen bg-paper-100 text-slate-700 selection:bg-accent-100 selection:text-ink-900">
       <Navbar />
 
       <main>
         <Hero onViewPdf={handleViewPdf} />
         <ResearchArtifacts onViewPdf={handleViewPdf} />
-        <ResearchVision />
-        <SalloraVisualizer onViewPdf={handleViewPdf} />
+        <GateConcatVisualizer />
         <Publications onViewPdf={handleViewPdf} />
-        <SystemsEngineering />
+        <SystemsEngineering onViewPdf={handleViewPdf} />
+        <Experience />
+        <ResearchVision />
         <AcademicCredentials onViewPdf={handleViewPdf} />
         <DocumentHub onViewPdf={handleViewPdf} />
       </main>
 
-      <ContactFooter onViewPdf={handleViewPdf} />
+      <ContactFooter />
 
       <PdfViewerModal
         isOpen={activePdfModal.isOpen}
