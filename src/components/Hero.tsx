@@ -87,7 +87,7 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
         <figure className="hero-photo hidden lg:block lg:w-72 xl:w-80 shrink-0">
           <div className="hero-photo-frame">
             <img
-              src={assetUrl('./images/rafi-beach.jpg')}
+              src={assetUrl('./images/rafi-beach.svg')}
               alt="MD. Rafi Imam at the beach"
               className="hero-photo-img"
             />
