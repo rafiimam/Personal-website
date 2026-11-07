@@ -17,7 +17,8 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
       </div>
 
       <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="max-w-3xl">
+        <div className="lg:flex lg:items-start lg:gap-12">
+        <div className="max-w-3xl lg:flex-1">
           <p className="eyebrow mb-5 flex items-center gap-2">
             <span className="inline-block h-px w-8 bg-brass-500" aria-hidden="true" />
             {PERSONAL_INFO.targetRole}
@@ -80,6 +81,18 @@ export const Hero: React.FC<HeroProps> = ({ onViewPdf }) => {
               <span key={interest} className="badge badge-subtle">{interest}</span>
             ))}
           </div>
+        </div>
+
+        {/* Photo — zigzag-edged frame filling the right side of the hero */}
+        <figure className="hero-photo hidden lg:block lg:w-72 xl:w-80 shrink-0">
+          <div className="hero-photo-frame">
+            <img
+              src={assetUrl('./images/rafi-beach.jpg')}
+              alt="MD. Rafi Imam at the beach"
+              className="hero-photo-img"
+            />
+          </div>
+        </figure>
         </div>
 
         {/* Metrics strip */}
